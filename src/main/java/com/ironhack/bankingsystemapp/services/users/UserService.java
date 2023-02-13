@@ -1,4 +1,4 @@
-package com.ironhack.bankingsystemapp.services;
+package com.ironhack.bankingsystemapp.services.users;
 
 import com.ironhack.bankingsystemapp.models.users.User;
 import com.ironhack.bankingsystemapp.models.users.Role;
@@ -55,71 +55,62 @@ public class UserService implements  UserDetailsService {
 
     /**
      * Saves a new user to the database
-     *
-     * @param user the user to be saved
-     * @return the saved user
-     */
-
-    public User saveUser(User user) {
-        log.info("Saving new user {} to the database", user.getName());
-        // Encode the user's password for security before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
+      */
+//    public User saveUser(User user) {
+//        log.info("Saving new user {} to the database", user.getName());
+//        // Encode the user's password for security before saving
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        return userRepository.save(user);
+//    }
 
     /**
      * Saves a new role to the database
-     *
-     * @param role the role to be saved
-     * @return the saved role
      */
-
-    public Role saveRole(Role role) {
-        log.info("Saving new role {} to the database", role.getRole());
-        return roleRepository.save(role);
-    }
+//    public Role saveRole(Role role) {
+//        log.info("Saving new role {} to the database", role.getRole());
+//        return roleRepository.save(role);
+//    }
 
     /**
      * Adds a role to the user with the given username
-     *
-     * @param username the username of the user to add the role to
-     * @param roleName the name of the role to be added
      */
 
-    public void addRoleToUser(String username, String roleName) {
-        log.info("Adding role {} to user {}", roleName, username);
-
-        // Retrieve the user and role objects from the repository
-        User user = userRepository.findByUsername(username);
-        Role role = roleRepository.findByRole(roleName);
-
-        // Add the role to the user's role collection
-        user.getRoles().add(role);
-
-        // Save the user to persist the changes
-        userRepository.save(user);
-    }
+//    public void addRoleToUser(String username, String roleName) {
+//        log.info("Adding role {} to user {}", roleName, username);
+//
+//        // Retrieve the user and role objects from the repository
+//        User user = userRepository.findByUsername(username);
+//        Role role = roleRepository.findByRole(roleName);
+//
+//        // Add the role to the user's role collection
+//        user.getRoles().add(role);
+//
+//        // Save the user to persist the changes
+//        userRepository.save(user);
+//    }
 
     /**
      * Retrieves the user with the given username
-     *
-     * @param username the username to search for
-     * @return the user with the given username
      */
-
     public User getUser(String username) {
         log.info("Fetching user {}", username);
         return userRepository.findByUsername(username);
     }
 
-    /**
-     * Retrieves all users from the database
-     *
-     * @return a list of all users
-     */
-
+    // get a List of all Users
     public List<User> getUsers() {
         log.info("Fetching all users");
         return userRepository.findAll();
     }
+
+
+
+
+    // delete User
+    public void deleteUser(Long id){
+        log.info("Deleting user {}", id, userRepository.findById(id).get().getName());
+        userRepository.deleteById(id);
+    }
+
+
 }

@@ -1,15 +1,14 @@
 package com.ironhack.bankingsystemapp;
 
+import com.ironhack.bankingsystemapp.models.users.*;
 import com.ironhack.bankingsystemapp.repositories.accounts.*;
 import com.ironhack.bankingsystemapp.repositories.users.*;
-import com.ironhack.bankingsystemapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
 
 @SpringBootApplication
 public class BankingSystemApplication implements CommandLineRunner{
@@ -45,6 +44,27 @@ public class BankingSystemApplication implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
+        Admin admin1 = new Admin("admin1", "admin1","1234");
+        adminRepository.save(admin1);
+
+        Address address1 = new Address("Calle 1","Barcelona","08020", "Spain");
+        Address mailaddress1 = new Address("mailaddress 1","Madrid","00000", "Spain");
+
+        AccountHolder accountHolder1 = new AccountHolder("Max Mustermann", "maxmustermann", "1234",LocalDate.of(1980,1,1),address1, mailaddress1);
+        accountHolderRepository.save(accountHolder1);
+
+        ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", "1234", "hashedKey" );
+        thirdPartyRepository.save(thirdParty1);
+
+        Role role1 = new Role("ACCOUNT-HOLDER", accountHolder1);
+        Role role2 = new Role("THIRD-PARTY", thirdParty1);
+        Role role3 = new Role("ADMIN", admin1);
+        roleRepository.save(role1);
+        roleRepository.save(role2);
+        roleRepository.save(role3);
+
+//        CheckingAccount account1 = new CheckingAccount(BigDecimal.valueOf(2000), accountHolder1,"abc");
+
 
     }
 
