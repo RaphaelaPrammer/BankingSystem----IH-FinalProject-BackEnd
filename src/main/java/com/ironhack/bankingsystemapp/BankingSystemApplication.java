@@ -1,5 +1,7 @@
 package com.ironhack.bankingsystemapp;
 
+import com.ironhack.bankingsystemapp.models.accounts.CheckingAccount;
+import com.ironhack.bankingsystemapp.models.accounts.SavingsAccount;
 import com.ironhack.bankingsystemapp.models.users.*;
 import com.ironhack.bankingsystemapp.repositories.accounts.*;
 import com.ironhack.bankingsystemapp.repositories.users.*;
@@ -8,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @SpringBootApplication
@@ -51,7 +54,10 @@ public class BankingSystemApplication implements CommandLineRunner{
         Address mailaddress1 = new Address("mailaddress 1","Madrid","00000", "Spain");
 
         AccountHolder accountHolder1 = new AccountHolder("Max Mustermann", "maxmustermann", "1234",LocalDate.of(1980,1,1),address1, mailaddress1);
+        AccountHolder accountHolder2 = new AccountHolder("Gustav", "gustav", "1234",LocalDate.of(1980,1,1),address1, mailaddress1);
+
         accountHolderRepository.save(accountHolder1);
+        accountHolderRepository.save(accountHolder2);
 
         ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", "1234", "hashedKey" );
         thirdPartyRepository.save(thirdParty1);
@@ -59,11 +65,22 @@ public class BankingSystemApplication implements CommandLineRunner{
         Role role1 = new Role("ACCOUNT-HOLDER", accountHolder1);
         Role role2 = new Role("THIRD-PARTY", thirdParty1);
         Role role3 = new Role("ADMIN", admin1);
+        Role role4 = new Role("ACCOUNT-HOLDER", accountHolder2);
         roleRepository.save(role1);
         roleRepository.save(role2);
         roleRepository.save(role3);
+        roleRepository.save(role4);
 
-//        CheckingAccount account1 = new CheckingAccount(BigDecimal.valueOf(2000), accountHolder1,"abc");
+        CheckingAccount checkingAccount1 = new CheckingAccount(BigDecimal.valueOf(2000), accountHolder1,"abc");
+        CheckingAccount checkingAccount2 = new CheckingAccount(BigDecimal.valueOf(50), accountHolder1,"abc");
+        SavingsAccount savingsAccount1 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder1, "abc");
+        SavingsAccount savingsAccount2 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder2, "abc", BigDecimal.valueOf(100), BigDecimal.valueOf(0.01));
+
+        accountRepository.save(checkingAccount1);
+        accountRepository.save(checkingAccount2);
+        accountRepository.save(savingsAccount1);
+        accountRepository.save(savingsAccount2);
+
 
 
     }

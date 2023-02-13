@@ -11,13 +11,14 @@ import java.time.LocalDate;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 public class CreditCard extends  Account{
-    @Min(100)
-    @Max(100000)
+    @DecimalMax("100.00")
+    @DecimalMax("100000.00")
     @NotNull
     private BigDecimal creditLimit = BigDecimal.valueOf(100);
 
     @DecimalMin("0.1")
     @DecimalMax("0.2")
+    @Digits(integer=0, fraction=4)
     private BigDecimal interestRate =BigDecimal.valueOf(0.2);
 
     private LocalDate lastInterestRateApplied = LocalDate.now();

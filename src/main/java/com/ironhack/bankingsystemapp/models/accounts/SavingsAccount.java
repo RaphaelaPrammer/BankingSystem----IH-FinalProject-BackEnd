@@ -6,6 +6,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDate;
 
 @Entity
@@ -14,14 +15,15 @@ public class SavingsAccount extends Account{
     @NotNull
     private String secretKey;
 
-    @Min(100)
-    @Max(1000)
+    @DecimalMin("100.00")
+    @DecimalMax("1000.00")
     @NotNull
     private BigDecimal minimumBalance = BigDecimal.valueOf(1000);
 
     @DecimalMin("0.0025")
     @DecimalMax("0.5")
-    private BigDecimal interestRate = BigDecimal.valueOf(0.0025);
+    @Digits(fraction=4, integer=0)
+    private BigDecimal interestRate = new BigDecimal("0.0025", new MathContext(4));
 
     private LocalDate lastInterestRateApplied = LocalDate.now();
 
