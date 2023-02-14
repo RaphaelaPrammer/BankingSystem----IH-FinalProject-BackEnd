@@ -6,14 +6,23 @@ import com.ironhack.bankingsystemapp.repositories.accounts.SavingsAccountReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
+
 @Service
 public class SavingsAccountService {
     @Autowired
     SavingsAccountRepository savingsAccountRepository;
 
     public Account createSavingsAccount(SavingsAccount savingsAccount){
-
-
         return savingsAccountRepository.save(savingsAccount);
     }
+
+
+
+
+
+
+
 }

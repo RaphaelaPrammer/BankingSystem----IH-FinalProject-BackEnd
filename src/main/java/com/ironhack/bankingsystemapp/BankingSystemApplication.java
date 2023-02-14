@@ -75,11 +75,15 @@ public class BankingSystemApplication implements CommandLineRunner{
         CheckingAccount checkingAccount2 = new CheckingAccount(BigDecimal.valueOf(50), accountHolder1,"abc");
         SavingsAccount savingsAccount1 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder1, "abc");
         SavingsAccount savingsAccount2 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder2, "abc", BigDecimal.valueOf(100), BigDecimal.valueOf(0.01));
-
+        SavingsAccount savingsAccount3 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder1, "abcdef", BigDecimal.valueOf(10), BigDecimal.valueOf(0.7));
+        SavingsAccount savingsAccount4 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder2, "abcdef", BigDecimal.valueOf(5000), BigDecimal.valueOf(0.001));
+        checkingAccount1.setCreationDate(LocalDate.of(2022,01,13));
         accountRepository.save(checkingAccount1);
         accountRepository.save(checkingAccount2);
         accountRepository.save(savingsAccount1);
         accountRepository.save(savingsAccount2);
+        accountRepository.save(savingsAccount3);
+        accountRepository.save(savingsAccount4);
 
 
 

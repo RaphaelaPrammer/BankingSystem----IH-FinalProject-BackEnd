@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
@@ -31,14 +32,14 @@ public class CreditCard extends  Account{
     }
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner);
-        this.creditLimit = creditLimit;
-        this.interestRate = interestRate;
+        setCreditLimit(creditLimit);
+        setInterestRate(interestRate);
     }
 
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
-        this.creditLimit = creditLimit;
-        this.interestRate = interestRate;
+        setCreditLimit(creditLimit);
+        setInterestRate(interestRate);
     }
 
     public BigDecimal getCreditLimit() {
@@ -46,7 +47,14 @@ public class CreditCard extends  Account{
     }
 
     public void setCreditLimit(BigDecimal creditLimit) {
-        this.creditLimit = creditLimit;
+        // Setting Values for Credit Limit, that when they Credit Card is created it respects the min/max values (min = 100, max = 100000)
+        if(creditLimit.compareTo(BigDecimal.valueOf(100))<0){
+            this.creditLimit=new BigDecimal("100");
+        } else if(creditLimit.compareTo(BigDecimal.valueOf(100000))>0){
+            this.creditLimit = new BigDecimal("100000");
+        }else{
+            this.creditLimit = creditLimit;
+        }
     }
 
     public BigDecimal getInterestRate() {
@@ -54,7 +62,14 @@ public class CreditCard extends  Account{
     }
 
     public void setInterestRate(BigDecimal interestRate) {
-        this.interestRate = interestRate;
+        // Setting Values for interest Rate for Credit Cards, that when they Credit Card is created it respects the min/max values (min = 0.1, max = 0.2)
+        if(interestRate.compareTo(BigDecimal.valueOf(0.1))<0){
+            this.interestRate=new BigDecimal("0.1");
+        } else if(interestRate.compareTo(BigDecimal.valueOf(0.2))>0){
+            this.interestRate = new BigDecimal("0.2");
+        }else{
+            this.interestRate = interestRate;
+        }
     }
 
     public LocalDate getLastInterestRateApplied() {
@@ -64,4 +79,22 @@ public class CreditCard extends  Account{
     public void setLastInterestRateApplied(LocalDate lastInterestRateApplied) {
         this.lastInterestRateApplied = lastInterestRateApplied;
     }
+
+    // PENALTY FEE - check if actual balance is greater than credit Limit , the penalty fee will be deducted.
+    public void applyPenaltyFeeCredit(){
+        if(super.getBalance().compareTo(creditLimit)<0){
+            super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
+        }
+    }
+
+    // INTEREST RATE
+    public void applyInterestRateCredit(){
+        // check if last Time the interest rate has been applied is more than one year, we add the interest rate to the balance.
+        if(Period.between(lastInterestRateApplied,LocalDate.now()).getMonths()>1){
+            super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate)));
+            // reset the lastInterestRateApplied Date
+            setLastInterestRateApplied(lastInterestRateApplied.plusMonths(1));
+        }
+    }
+
 }

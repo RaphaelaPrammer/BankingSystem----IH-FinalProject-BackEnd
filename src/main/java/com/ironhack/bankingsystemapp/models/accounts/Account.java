@@ -32,7 +32,7 @@ public abstract class Account {
 
     private final BigDecimal PENALTY_FEE = BigDecimal.valueOf(40);
 
-    private LocalDate creationDate;
+    private LocalDate creationDate = LocalDate.now();
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
@@ -54,7 +54,7 @@ public abstract class Account {
         setPrimaryOwner(primaryOwner);
        setSecondaryOwner(secondaryOwner);
         this.status = Status.ACTIVE;
-        creationDate = LocalDate.now();
+        //creationDate = LocalDate.now();
     }
 
     public Long getId() {
