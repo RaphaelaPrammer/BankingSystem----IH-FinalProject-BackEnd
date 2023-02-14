@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Service
 public class StudentAccountService {
@@ -32,5 +33,9 @@ public class StudentAccountService {
         }
     }
 
+    // Get a List with all Student Accounts
+    public List<StudentAccount> getAllStudentAccounts(){
+        return studentAccountRepository.findAll();
+    }
 
 }

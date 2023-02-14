@@ -1,6 +1,7 @@
 package com.ironhack.bankingsystemapp;
 
 import com.ironhack.bankingsystemapp.models.accounts.CheckingAccount;
+import com.ironhack.bankingsystemapp.models.accounts.CreditCard;
 import com.ironhack.bankingsystemapp.models.accounts.SavingsAccount;
 import com.ironhack.bankingsystemapp.models.users.*;
 import com.ironhack.bankingsystemapp.repositories.accounts.*;
@@ -78,13 +79,14 @@ public class BankingSystemApplication implements CommandLineRunner{
         SavingsAccount savingsAccount3 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder1, "abcdef", BigDecimal.valueOf(10), BigDecimal.valueOf(0.7));
         SavingsAccount savingsAccount4 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder2, "abcdef", BigDecimal.valueOf(5000), BigDecimal.valueOf(0.001));
         checkingAccount1.setCreationDate(LocalDate.of(2022,01,13));
+        CreditCard creditCard1 = new CreditCard(BigDecimal.valueOf(3000), accountHolder2);
         accountRepository.save(checkingAccount1);
         accountRepository.save(checkingAccount2);
         accountRepository.save(savingsAccount1);
         accountRepository.save(savingsAccount2);
         accountRepository.save(savingsAccount3);
         accountRepository.save(savingsAccount4);
-
+        accountRepository.save(creditCard1);
 
 
     }

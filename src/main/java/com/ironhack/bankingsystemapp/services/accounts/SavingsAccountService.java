@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Service
 public class SavingsAccountService {
@@ -18,7 +19,11 @@ public class SavingsAccountService {
     public Account createSavingsAccount(SavingsAccount savingsAccount){
         return savingsAccountRepository.save(savingsAccount);
     }
+ // get a List with all Savings Accounts
 
+    public List<SavingsAccount> getAllSavingsAccounts(){
+        return savingsAccountRepository.findAll();
+    }
 
 
 

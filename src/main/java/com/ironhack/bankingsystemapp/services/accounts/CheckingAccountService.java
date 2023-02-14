@@ -36,6 +36,9 @@ public class CheckingAccountService {
         } return checkingAccountRepository.save(checkingAccount);
     }
 
-
+// Get a List with all Checking Accounts
+    public List<CheckingAccount> getCheckingAccounts(){
+        return checkingAccountRepository.findAll();
+    }
 
 }

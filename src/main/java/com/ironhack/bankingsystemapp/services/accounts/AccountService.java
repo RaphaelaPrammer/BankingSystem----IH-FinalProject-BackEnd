@@ -44,8 +44,8 @@ public Account findById(Long id){
     return accountRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This account does not exist"));
 }
 
-public Account findByName(String ownerName){
-    return accountRepository.findByPrimaryOwnerName(ownerName).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no account for this Name"));
+public Account findByName(String username){
+    return accountRepository.findByPrimaryOwnerUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no account for this Name"));
 }
 
 // deleteAccount(id) --> ADMIN RIGHT
@@ -155,8 +155,7 @@ public void deleteAccount(Long id){
 
 
 
-// modifyBalanceAdd
-
+// modifyBalanceAdd -- ADMIN
 public BigDecimal modifyBalanceAdd(Long id, BigDecimal amount){
     Account account = accountRepository.findById(id).get();
     account.setBalance(account.getBalance().add(amount));
@@ -164,7 +163,7 @@ public BigDecimal modifyBalanceAdd(Long id, BigDecimal amount){
     return account.getBalance();
 }
 
-// modifyBalanceSubtract
+// modifyBalanceSubtract -- ADMIN
 public BigDecimal modifyBalanceSubtract(Long id, BigDecimal amount){
     Account account = accountRepository.findById(id).get();
     account.setBalance(account.getBalance().subtract(amount));
