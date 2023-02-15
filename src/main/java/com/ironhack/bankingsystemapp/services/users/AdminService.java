@@ -20,7 +20,7 @@ public class AdminService {
     PasswordEncoder passwordEncoder;
 
     // create Admin User, encode the password, add it to the DB and add the Role "ADMIN" to it.
-    public User addAdmin(Admin admin){
+    public Admin addAdmin(Admin admin){
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         Admin newAdmin = adminRepository.save(admin);
         roleRepository.save(new Role("ADMIN", newAdmin));

@@ -21,7 +21,7 @@ public class ThirdPartyService {
     PasswordEncoder passwordEncoder;
 
     // create a Third Party User with encoded Password, save it to the DB, and add the Role "THIRD-PARTY" to it.
-    public User addThirdParty (ThirdParty thirdParty){
+    public ThirdParty addThirdParty (ThirdParty thirdParty){
         thirdParty.setPassword(passwordEncoder.encode(thirdParty.getPassword()));
         ThirdParty newThirdParty = thirdPartyRepository.save(thirdParty);
         roleRepository.save(new Role("THIRD-PARTY",newThirdParty));

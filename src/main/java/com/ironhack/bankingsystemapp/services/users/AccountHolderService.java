@@ -32,7 +32,7 @@ public class AccountHolderService {
     PasswordEncoder passwordEncoder;
 
     // create an Account Holder User, encode the password, add it to the DB and add the Role "ACCOUNT-HOLDER" to it.
-    public User addAccountHolder(AccountHolder accountHolder){
+    public AccountHolder addAccountHolder(AccountHolder accountHolder){
         accountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
         AccountHolder newAccountHolder = accountHolderRepository.save(accountHolder);
         roleRepository.save(new Role("ACCOUNT-HOLDER", newAccountHolder));

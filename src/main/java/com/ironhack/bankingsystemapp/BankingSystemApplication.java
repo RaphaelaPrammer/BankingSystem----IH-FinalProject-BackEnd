@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,6 +42,8 @@ public class BankingSystemApplication implements CommandLineRunner{
     @Autowired
     StudentAccountRepository studentAccountRepository;
 
+@Autowired
+    PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(BankingSystemApplication.class, args);
@@ -48,19 +51,20 @@ public class BankingSystemApplication implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        Admin admin1 = new Admin("admin1", "admin1","1234");
+        Admin admin1 = new Admin("admin1", "admin1", passwordEncoder.encode("1234"));
         adminRepository.save(admin1);
 
         Address address1 = new Address("Calle 1","Barcelona","08020", "Spain");
         Address mailaddress1 = new Address("mailaddress 1","Madrid","00000", "Spain");
 
-        AccountHolder accountHolder1 = new AccountHolder("Max Mustermann", "maxmustermann", "1234",LocalDate.of(1980,1,1),address1, mailaddress1);
-        AccountHolder accountHolder2 = new AccountHolder("Gustav", "gustav", "1234",LocalDate.of(1980,1,1),address1, mailaddress1);
+        AccountHolder accountHolder1 = new AccountHolder("Max Mustermann", "maxmustermann", passwordEncoder.encode("1234"),LocalDate.of(1980,1,1),address1, mailaddress1);
+
+        AccountHolder accountHolder2 = new AccountHolder("Gustav", "gustav", passwordEncoder.encode("1234"),LocalDate.of(1980,1,1),address1, mailaddress1);
 
         accountHolderRepository.save(accountHolder1);
         accountHolderRepository.save(accountHolder2);
 
-        ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", "1234", "hashedKey" );
+        ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", passwordEncoder.encode("1234"), "superhashedkey" );
         thirdPartyRepository.save(thirdParty1);
 
         Role role1 = new Role("ACCOUNT-HOLDER", accountHolder1);

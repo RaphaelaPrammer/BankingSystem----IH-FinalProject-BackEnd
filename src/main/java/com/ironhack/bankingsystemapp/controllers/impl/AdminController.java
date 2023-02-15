@@ -90,6 +90,7 @@ public class AdminController {
     public void deleteAccount(@RequestParam Long id){
         accountService.deleteAccount(id);
     }
+
     //--------- Get Balance of Account ---------------
      @GetMapping("/accounts/balance")
      @ResponseStatus(HttpStatus.OK)
@@ -141,17 +142,17 @@ public class AdminController {
     // --------- create Users ------------
     @PostMapping("/users/new/admin")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createAdmin(@RequestBody Admin admin){
+    public Admin createAdmin(@RequestBody Admin admin){
         return adminService.addAdmin(admin);
     }
     @PostMapping("/users/new/accountholder")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createAccountHolder(@RequestBody AccountHolder accountHolder){
+    public AccountHolder createAccountHolder(@RequestBody AccountHolder accountHolder){
         return accountHolderService.addAccountHolder(accountHolder);
     }
     @PostMapping("/users/new/thirdparty")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createThirdParty(@RequestBody ThirdParty thirdParty){
+    public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty){
         return thirdPartyService.addThirdParty(thirdParty);
     }
 
@@ -164,6 +165,17 @@ public class AdminController {
         userService.deleteUser(id);
     }
 
+    // --------- get Users ------------
+    @GetMapping("/users/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getUsers(){
+        return userService.getUsers();
+    }
+    @GetMapping("/users/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUser(@PathVariable String username){
+        return userService.getUser(username);
+    }
 
 
 }

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -191,5 +193,10 @@ public class TransactionService {
         return sendingAccount;
     }
 
+    public List getListOfTransactions(Long userId){
+            List receivingTransactions = new ArrayList<>(transactionRepository.findByReceiverAccountId(userId)) ;
+            List sendingTransactions = new ArrayList<>(transactionRepository.findBySenderAccountId(userId));
+            return List.of(receivingTransactions,sendingTransactions);
+    }
 
 }

@@ -97,6 +97,7 @@ public class UserService implements  UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+
     // get a List of all Users
     public List<User> getUsers() {
         log.info("Fetching all users");
