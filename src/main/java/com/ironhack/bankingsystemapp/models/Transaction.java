@@ -1,14 +1,13 @@
 package com.ironhack.bankingsystemapp.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.ironhack.bankingsystemapp.models.accounts.Account;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Transaction {
@@ -16,11 +15,15 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long senderAccountId;
+    @NotNull(message = "The Sender Account cannot be empty")
+    @ManyToOne
+    @JoinColumn(name="sender_account_id")
+    private Account senderAccount;
 
-    @NotNull
-    private Long receiverAccountId;
+    @NotNull(message = "The Receiver Account cannot be empty")
+    @ManyToOne
+    @JoinColumn(name="receiver_account_id")
+    private Account receiverAccount;
 
     @NotNull
     private String receiverName;
@@ -28,17 +31,17 @@ public class Transaction {
     @NotNull
     private BigDecimal transferAmount;
 
-    private LocalDate transactionDate;
+    private LocalDateTime transactionDate;
 
     public Transaction() {
     }
 
-    public Transaction(Long senderAccountId, Long receiverAccountId, String receiverName, BigDecimal transferAmount) {
-        this.senderAccountId = senderAccountId;
-        this.receiverAccountId = receiverAccountId;
+    public Transaction(Account senderAccount, Account receiverAccount, String receiverName, BigDecimal transferAmount) {
+        this.senderAccount = senderAccount;
+        this.receiverAccount = receiverAccount;
         this.receiverName = receiverName;
         this.transferAmount = transferAmount;
-        this.transactionDate= LocalDate.now();
+        this.transactionDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -49,20 +52,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public Long getSenderAccountId() {
-        return senderAccountId;
+    public Account getSenderAccount() {
+        return senderAccount;
     }
 
-    public void setSenderAccountId(Long senderAccountId) {
-        this.senderAccountId = senderAccountId;
+    public void setSenderAccount(Account senderAccount) {
+        this.senderAccount = senderAccount;
     }
 
-    public Long getReceiverAccountId() {
-        return receiverAccountId;
+    public Account getReceiverAccount() {
+        return receiverAccount;
     }
 
-    public void setReceiverAccountId(Long receiverAccountId) {
-        this.receiverAccountId = receiverAccountId;
+    public void setReceiverAccount(Account receiverAccount) {
+        this.receiverAccount = receiverAccount;
     }
 
     public String getReceiverName() {
@@ -81,11 +84,11 @@ public class Transaction {
         this.transferAmount = transferAmount;
     }
 
-    public LocalDate getTransactionDate() {
+    public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDate transactionDate) {
+    public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 }

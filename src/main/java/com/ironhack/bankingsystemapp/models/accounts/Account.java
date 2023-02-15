@@ -1,5 +1,7 @@
 package com.ironhack.bankingsystemapp.models.accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ironhack.bankingsystemapp.models.Transaction;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -9,6 +11,8 @@ import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -32,14 +36,21 @@ public abstract class Account {
 
     private final BigDecimal PENALTY_FEE = BigDecimal.valueOf(40);
 
-    private LocalDate creationDate = LocalDate.now();
+    private LocalDate creationDate = LocalDate.now() ;
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "senderAccount", fetch = FetchType.EAGER)
+    private List<Transaction> listSenders = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiverAccount", fetch = FetchType.EAGER)
+    private List<Transaction> listReceivers = new ArrayList<>();
 
     public Account() {
+        this.status = Status.ACTIVE;
+        creationDate = LocalDate.now();
     }
 
     public Account(BigDecimal balance, AccountHolder primaryOwner) {
@@ -52,9 +63,9 @@ public abstract class Account {
     public Account(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
         setBalance(balance);
         setPrimaryOwner(primaryOwner);
-       setSecondaryOwner(secondaryOwner);
+        setSecondaryOwner(secondaryOwner);
         this.status = Status.ACTIVE;
-        //creationDate = LocalDate.now();
+        creationDate = LocalDate.now();
     }
 
     public Long getId() {
@@ -107,5 +118,21 @@ public abstract class Account {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Transaction> getListSenders() {
+        return listSenders;
+    }
+
+    public void setListSenders(List<Transaction> listSenders) {
+        this.listSenders = listSenders;
+    }
+
+    public List<Transaction> getListReceivers() {
+        return listReceivers;
+    }
+
+    public void setListReceivers(List<Transaction> listReceivers) {
+        this.listReceivers = listReceivers;
     }
 }

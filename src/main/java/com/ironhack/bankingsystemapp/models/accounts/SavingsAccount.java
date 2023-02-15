@@ -27,6 +27,7 @@ public class SavingsAccount extends Account{
     private BigDecimal interestRate = new BigDecimal("0.0025", new MathContext(4));
 
     private LocalDate lastInterestRateApplied = LocalDate.now();
+    private LocalDate lastPenaltyFeeApplied = LocalDate.now();
 
     public SavingsAccount() {
     }
@@ -97,13 +98,24 @@ public class SavingsAccount extends Account{
         this.lastInterestRateApplied = lastInterestRateApplied;
     }
 
+    public LocalDate getLastPenaltyFeeApplied() {
+        return lastPenaltyFeeApplied;
+    }
+
+    public void setLastPenaltyFeeApplied(LocalDate lastPenaltyFeeApplied) {
+        this.lastPenaltyFeeApplied = lastPenaltyFeeApplied;
+    }
 
     // PENALTY FEE - check if actual balance is greater than minimum Balance - if not (condition will be -1), the penalty fee will be deducted.
     public void applyPenaltyFeeSavings(){
         if(super.getBalance().compareTo(minimumBalance)<0){
-            super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
+            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>3){
+                super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
+                setLastPenaltyFeeApplied(LocalDate.now());
+            }
         }
     }
+
 
 // INTEREST RATE
     public void applyInterestRateSavings(){
@@ -111,7 +123,7 @@ public class SavingsAccount extends Account{
         if(Period.between(lastInterestRateApplied,LocalDate.now()).getYears()>1){
             super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate)));
             // reset the lastInterestRateApplied Date
-            setLastInterestRateApplied(lastInterestRateApplied.plusYears(1));
+            setLastInterestRateApplied(LocalDate.now());
         }
     }
 

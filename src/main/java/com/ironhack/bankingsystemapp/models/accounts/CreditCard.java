@@ -23,23 +23,27 @@ public class CreditCard extends  Account{
     private BigDecimal interestRate =BigDecimal.valueOf(0.2);
 
     private LocalDate lastInterestRateApplied = LocalDate.now();
+    private LocalDate lastPenaltyFeeApplied = LocalDate.now();
 
 
     public CreditCard() {
     }
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner) {
-        super(balance, primaryOwner);
+         super(balance, primaryOwner);
+        this.lastInterestRateApplied=super.getCreationDate();
     }
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
+        this.lastInterestRateApplied=super.getCreationDate();
     }
 
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
+        this.lastInterestRateApplied=super.getCreationDate();
     }
 
     public BigDecimal getCreditLimit() {
@@ -80,10 +84,21 @@ public class CreditCard extends  Account{
         this.lastInterestRateApplied = lastInterestRateApplied;
     }
 
+    public LocalDate getLastPenaltyFeeApplied() {
+        return lastPenaltyFeeApplied;
+    }
+
+    public void setLastPenaltyFeeApplied(LocalDate lastPenaltyFeeApplied) {
+        this.lastPenaltyFeeApplied = lastPenaltyFeeApplied;
+    }
+
     // PENALTY FEE - check if actual balance is greater than credit Limit , the penalty fee will be deducted.
     public void applyPenaltyFeeCredit(){
         if(super.getBalance().compareTo(creditLimit)<0){
-            super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
+            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>3){
+                super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
+                setLastPenaltyFeeApplied(LocalDate.now());
+            }
         }
     }
 
@@ -93,7 +108,7 @@ public class CreditCard extends  Account{
         if(Period.between(lastInterestRateApplied,LocalDate.now()).getMonths()>1){
             super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate)));
             // reset the lastInterestRateApplied Date
-            setLastInterestRateApplied(lastInterestRateApplied.plusMonths(1));
+            setLastInterestRateApplied(LocalDate.now());
         }
     }
 

@@ -40,8 +40,8 @@ public class AccountHolderController {
     }
     @GetMapping("/accounts/")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getAccounts(@RequestParam Long id){
-        return accountHolderService.getListOfAccountsById(id);
+    public List<Account> getAccounts(@RequestParam Long UserId){
+        return accountHolderService.getListOfAccountsById(UserId);
     }
 
    // ----------- Update Account Info -------------
