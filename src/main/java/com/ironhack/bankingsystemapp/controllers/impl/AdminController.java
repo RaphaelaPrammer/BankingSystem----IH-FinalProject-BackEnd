@@ -170,8 +170,6 @@ public class AdminController {
     }
 
     // --------- delete Users ------------
-
-    //-----------------does not work-------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @DeleteMapping("/users/delete")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void deleteUser(@RequestParam Long id){
@@ -199,6 +197,13 @@ public class AdminController {
         Collection<Role> roleList = userRepository.findById(userId).get().getRoles();
 
         return roleList;
+    }
+
+    // ---------- add Role to User -----------
+    @PatchMapping("roles/add-role-to-user")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addRoleToUser(@RequestParam String userName, String roleName){
+        userService.addRoleToUser(userName,roleName);
     }
 
 }

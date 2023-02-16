@@ -8,6 +8,7 @@ import com.ironhack.bankingsystemapp.repositories.users.RoleRepository;
 import com.ironhack.bankingsystemapp.repositories.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,7 +37,7 @@ public class AccountHolderService {
         AccountHolder newAccountHolder = accountHolderRepository.save(accountHolder);
         Role role = roleRepository.findByRole("ACCOUNT-HOLDER");
         newAccountHolder.getRoles().add(role);
-
+        accountHolderRepository.save(newAccountHolder);
         return newAccountHolder;
     }
 
@@ -46,12 +47,11 @@ public class AccountHolderService {
     }
 
     // Get a List of all Accounts of the Owner --- ACCOUNT-HOLDER
-    public List<Account> getListOfAccountsByUsername(String userName){
-        // check if there is a user with the given id
-            //AccountHolder accountHolder1 = accountHolderRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "No Account Holder found"));
-
+    public List<Account> getListOfAccountsByUsername(Authentication authentication){
+        AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).get();
+        String username = user.getUsername();
         // check if there is a user with the given username
-        AccountHolder accountHolder1 = accountHolderRepository.findByUsername(userName)
+        AccountHolder accountHolder1 = accountHolderRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found"));
 
         // get the List of the primary Accounts with this id
@@ -69,6 +69,7 @@ public class AccountHolderService {
 
 // add Mailing address to Account Holder info
     public AccountHolder addMailingAddress(Long userId, Address mailAddress){
+
         AccountHolder accountHolderFromDB = accountHolderRepository.findById(userId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder does not exist"));
 
             accountHolderFromDB.setMailingAddress(mailAddress);

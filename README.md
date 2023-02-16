@@ -23,7 +23,9 @@ All functionalities of the app are being tested with Test Units.
 - MySQL
 - Srping Security
 
-
+{
+"error_message": "Request processing failed: java.lang.NullPointerException: Cannot invoke \"org.springframework.security.core.userdetails.UserDetails.getUsername()\" because \"userDetails\" is null"
+}
 
 
 

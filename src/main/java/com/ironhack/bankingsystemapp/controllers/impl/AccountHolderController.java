@@ -4,17 +4,20 @@ import com.ironhack.bankingsystemapp.dtos.TransactionDTO;
 import com.ironhack.bankingsystemapp.models.accounts.Account;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import com.ironhack.bankingsystemapp.models.users.Address;
+import com.ironhack.bankingsystemapp.repositories.users.AccountHolderRepository;
 import com.ironhack.bankingsystemapp.services.TransactionService;
 import com.ironhack.bankingsystemapp.services.accounts.AccountService;
 import com.ironhack.bankingsystemapp.services.users.AccountHolderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/accountholder-area")
@@ -27,15 +30,23 @@ public class AccountHolderController {
     @Autowired
     TransactionService transactionService;
 
-
+@Autowired
+    AccountHolderRepository accountHolderRepository;
 
 
     //--------- Get Balance of Account --------------- ?????????????? with authenticationprincipal ???
-//    @GetMapping("/accounts/my-balance")
+//    @GetMapping("/accounts/my-balance-test")
 //    @ResponseStatus(HttpStatus.OK)
-//    public BigDecimal getBalance(@RequestParam Long accountId, @AuthenticationPrincipal UserDetails userDetails){
-//        return accountService.getBalanceAccountHolder(accountId, userDetails);
+//    public BigDecimal getBalanceTest(@RequestParam Long accountId, @AuthenticationPrincipal UserDetails userDetails){
+//        return accountService.getBalanceAccountHolderTest(accountId, userDetails);
 //    }
+    //--------- Get Balance of Account WITH AUTH------------!!!!!!!!!!! WORKING---
+    @GetMapping("/accounts/my-balance-test2")
+    @ResponseStatus(HttpStatus.OK)
+    public BigDecimal getBalanceTest2(@RequestParam Long accountId,Authentication authentication){
+        return accountService.getBalanceAccountHolderTest2(accountId, authentication);
+    }
+    //--------- Get Balance of Account WITHOUT AUTH---------------
     @GetMapping("/accounts/my-balance")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getBalance(@RequestParam Long accountId, @RequestParam Long ownerId){
@@ -43,13 +54,13 @@ public class AccountHolderController {
     }
 
 
-  // --------- Get List of Accounts -----------
+  // --------- Get List of Accounts  WITH AUTHENTICATION-------NOT WORKING----
     @GetMapping("/my-accounts")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getListAccounts(@AuthenticationPrincipal UserDetails userDetails){
-        String username = userDetails.getUsername();
-        return accountHolderService.getListOfAccountsByUsername(username);
+    public List<Account> getListAccounts(Authentication authentication){
+        return accountHolderService.getListOfAccountsByUsername(authentication);
     }
+    // --------- Get List of Accounts  WITHOUT AUTHENTICATION-----------
 //    @GetMapping("/accounts/")
 //    @ResponseStatus(HttpStatus.OK)
 //            public List<Account> getAccounts(@RequestParam Long UserId){
@@ -59,7 +70,7 @@ public class AccountHolderController {
    // ----------- Update Account Info -------------
     @PatchMapping("/add-mailing-address")
     @ResponseStatus(HttpStatus.OK)
-    public AccountHolder addMailingAddress(@RequestParam Long id,@RequestBody Address mailAddress){
+    public AccountHolder addMailingAddress(@RequestParam Long id, @RequestBody Address mailAddress){
         return accountHolderService.addMailingAddress(id, mailAddress);
     }
     @PatchMapping("/update-address")
@@ -78,8 +89,8 @@ public class AccountHolderController {
     // ----------- Transaction ----------------------??????????????? with USER DETAILS ??? --
     @PostMapping("/transaction")
     @ResponseStatus(HttpStatus.OK)
-    public Account transferMoney(@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal UserDetails userDetails){
-        return transactionService.makeTransaction(transactionDTO, userDetails);
+    public Account transferMoney(@RequestBody TransactionDTO transactionDTO, Authentication authentication){
+        return transactionService.makeTransaction(transactionDTO, authentication);
     }
 
 //    @GetMapping("/transaction/all")

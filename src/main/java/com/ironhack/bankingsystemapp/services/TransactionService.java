@@ -14,6 +14,7 @@ import com.ironhack.bankingsystemapp.repositories.users.ThirdPartyRepository;
 import com.ironhack.bankingsystemapp.repositories.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,23 +39,26 @@ public class TransactionService {
     AccountHolderRepository accountHolderRepository;
 
 
-    public Account makeTransaction(TransactionDTO transactionDTO, UserDetails userDetails){
-
-        Account senderAccount = null;
-
+    public Account makeTransaction(TransactionDTO transactionDTO, Authentication authentication){
+        // get the receiving account from the DTO.
         Account receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
 
         // with userDetails
 //         get the sender from the userDetails
-       AccountHolder sender = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found "));
+       AccountHolder sender = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found "));
        //check if the senderId from the transactionDTO matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
-       for(Account account : sender.getPrimaryAccounts()){
-           if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
+        Account senderAccount1=null;
+       for(Account pa : sender.getPrimaryAccounts()){
+           if(pa.getId().equals(transactionDTO.getSenderAccountId())) {
+               senderAccount1 = pa;
+           }
        }
-        for(Account account : sender.getSecondaryAccounts()){
-            if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
+        for(Account sa : sender.getSecondaryAccounts()){
+            if(sa.getId().equals(transactionDTO.getSenderAccountId())) {
+                senderAccount1 = sa;
+            }
         }
-
+        Account senderAccount = accountRepository.findById(senderAccount1.getId()).get();
         //----
         // without userDetails:
 //         Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
