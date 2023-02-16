@@ -24,6 +24,8 @@ import java.util.ArrayList;
 @SpringBootApplication
 public class BankingSystemApplication implements CommandLineRunner{
 
+    @Autowired
+    UserService userService;
     //User Repositories
     @Autowired
     UserRepository userRepository;
@@ -76,11 +78,18 @@ public class BankingSystemApplication implements CommandLineRunner{
         savingsAccountRepository.save(savingsAccount);
         //transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
 
-        Role role1 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder1));
-        Role role2 = roleRepository.save(new Role("THIRD-PARTY", thirdParty));
-        Role role3 = roleRepository.save(new Role("ADMIN", admin));
-        Role role4 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder2));
+//        Role role1 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder1));
+//        Role role2 = roleRepository.save(new Role("THIRD-PARTY", thirdParty));
+//        Role role3 = roleRepository.save(new Role("ADMIN", admin));
+//        Role role4 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder2));
+         roleRepository.save(new Role("ACCOUNT-HOLDER"));
+         roleRepository.save(new Role("THIRD-PARTY"));
+         roleRepository.save(new Role("ADMIN"));
 
+         userService.addRoleToUser("admin1", "ADMIN");
+        userService.addRoleToUser("user1", "ACCOUNT-HOLDER");
+        userService.addRoleToUser("user2", "ACCOUNT-HOLDER");
+        userService.addRoleToUser("thirdparty1", "THIRD-PARTY");
 
 
 

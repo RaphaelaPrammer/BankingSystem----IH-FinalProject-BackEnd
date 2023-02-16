@@ -23,6 +23,8 @@ public class AccountHolderService {
     @Autowired
     AccountHolderRepository accountHolderRepository;
     @Autowired
+    UserService userService;
+    @Autowired
     RoleRepository roleRepository;
     @Autowired
     UserRepository userRepository;
@@ -34,8 +36,10 @@ public class AccountHolderService {
     // create an Account Holder User, encode the password, add it to the DB and add the Role "ACCOUNT-HOLDER" to it.
     public AccountHolder addAccountHolder(AccountHolder accountHolder){
         accountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
+        userService.addRoleToUser(accountHolder.getUsername(),"ACCOUNT-HOLDER");
         AccountHolder newAccountHolder = accountHolderRepository.save(accountHolder);
-        roleRepository.save(new Role("ACCOUNT-HOLDER", newAccountHolder));
+        //roleRepository.save(new Role("ACCOUNT-HOLDER", newAccountHolder));
+
         return newAccountHolder;
     }
 

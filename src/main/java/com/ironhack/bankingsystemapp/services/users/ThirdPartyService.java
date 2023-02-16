@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ThirdPartyService {
-
+    @Autowired
+    UserService userService;
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
     @Autowired
@@ -23,8 +24,9 @@ public class ThirdPartyService {
     // create a Third Party User with encoded Password, save it to the DB, and add the Role "THIRD-PARTY" to it.
     public ThirdParty addThirdParty (ThirdParty thirdParty){
         thirdParty.setPassword(passwordEncoder.encode(thirdParty.getPassword()));
+        userService.addRoleToUser(thirdParty.getUsername(),"THIRD-PARTY");
         ThirdParty newThirdParty = thirdPartyRepository.save(thirdParty);
-        roleRepository.save(new Role("THIRD-PARTY",newThirdParty));
+        //roleRepository.save(new Role("THIRD-PARTY",newThirdParty));
         return newThirdParty;
     }
 

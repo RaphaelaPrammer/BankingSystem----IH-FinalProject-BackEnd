@@ -30,8 +30,8 @@ public class UserService implements  UserDetailsService {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -75,19 +75,19 @@ public class UserService implements  UserDetailsService {
      * Adds a role to the user with the given username
      */
 
-//    public void addRoleToUser(String username, String roleName) {
-//        log.info("Adding role {} to user {}", roleName, username);
-//
-//        // Retrieve the user and role objects from the repository
-//        User user = userRepository.findByUsername(username);
-//        Role role = roleRepository.findByRole(roleName);
-//
-//        // Add the role to the user's role collection
-//        user.getRoles().add(role);
-//
-//        // Save the user to persist the changes
-//        userRepository.save(user);
-//    }
+    public void addRoleToUser(String username, String roleName) {
+        log.info("Adding role {} to user {}", roleName, username);
+
+        // Retrieve the user and role objects from the repository
+        User user = userRepository.findByUsername(username);
+        Role role = roleRepository.findByRole(roleName);
+
+        // Add the role to the user's role collection
+        user.getRoles().add(role);
+
+        // Save the user to persist the changes
+        userRepository.save(user);
+    }
 
     /**
      * Retrieves the user with the given username

@@ -191,12 +191,12 @@ public class AdminController {
 
 
     // ------------- find Role of User -----------
-    @GetMapping("/roles/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public String getRoleByUserId(@PathVariable Long userId){
-        Role role = roleRepository.findByUserId(userId);
-        String roleName = role.getRole();
-        return roleName;
-    }
+//    @GetMapping("/roles/{userId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public String getRoleByUserId(@PathVariable Long userId){
+//        Role role = roleRepository.findByUserId(userId);
+//        String roleName = role.getRole();
+//        return roleName;
+//    }
 
 }

@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AdminService {
-
+@Autowired
+UserService userService;
     @Autowired
     AdminRepository adminRepository;
     @Autowired
@@ -22,8 +23,9 @@ public class AdminService {
     // create Admin User, encode the password, add it to the DB and add the Role "ADMIN" to it.
     public Admin addAdmin(Admin admin){
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        userService.addRoleToUser(admin.getUsername(),"ADMIN");
         Admin newAdmin = adminRepository.save(admin);
-        roleRepository.save(new Role("ADMIN", newAdmin));
+        //roleRepository.save(new Role("ADMIN", newAdmin));
         return newAdmin;
     }
 
