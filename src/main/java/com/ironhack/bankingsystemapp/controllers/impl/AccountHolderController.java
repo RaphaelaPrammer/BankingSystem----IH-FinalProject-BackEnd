@@ -78,8 +78,8 @@ public class AccountHolderController {
     // ----------- Transaction ----------------------??????????????? with USER DETAILS ??? --
     @PostMapping("/transaction")
     @ResponseStatus(HttpStatus.OK)
-    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
-        return transactionService.makeTransaction(transactionDTO);
+    public Account transferMoney(@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal UserDetails userDetails){
+        return transactionService.makeTransaction(transactionDTO, userDetails);
     }
 
 //    @GetMapping("/transaction/all")

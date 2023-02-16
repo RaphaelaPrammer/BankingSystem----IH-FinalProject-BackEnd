@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,26 +38,26 @@ public class TransactionService {
     AccountHolderRepository accountHolderRepository;
 
 
-    public Account makeTransaction(TransactionDTO transactionDTO){
+    public Account makeTransaction(TransactionDTO transactionDTO, UserDetails userDetails){
 
-//        Account senderAccount = null;
-//
+        Account senderAccount = null;
+
         Account receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
 
         // with userDetails
-        // get the sender from the userDetails
-//       AccountHolder sender = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found "));
-//       //check if the senderId from the transactionDTO matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
-//       for(Account account : sender.getPrimaryAccounts()){
-//           if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
-//       }
-//        for(Account account : sender.getSecondaryAccounts()){
-//            if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
-//        }
+//         get the sender from the userDetails
+       AccountHolder sender = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found "));
+       //check if the senderId from the transactionDTO matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
+       for(Account account : sender.getPrimaryAccounts()){
+           if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
+       }
+        for(Account account : sender.getSecondaryAccounts()){
+            if(account.getId() == transactionDTO.getSenderAccountId()) senderAccount = account;
+        }
 
         //----
         // without userDetails:
-         Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
+//         Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
         //------
 
         // check if there are enough funds on the sending account.
@@ -222,5 +223,21 @@ public class TransactionService {
 //            return List.of(receivingTransactions,sendingTransactions);
 //    }
 
+//    public List getListOfTransactions(Long userId){
+//        List<Transaction> list1 = transactionRepository.findBySenderAccountIdOrReceiverAccountId(userId);
+//        Long senderAccountId ;
+//         Long receiverAccountId;
+//         String receiverName ;
+//         BigDecimal amount ;
+//        LocalDateTime transactionDate;
+//        for( Transaction t : list1){
+//            receiverName=t.getReceiverName();
+//            amount=t.getTransferAmount();
+//            senderAccountId=t.getSenderAccount().getId();
+//            receiverAccountId=t.getReceiverAccount().getId();
+//            transactionDate=t.getTransactionDate();
+//            //TO BE CONTINUED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        }
+//    }
 
 }

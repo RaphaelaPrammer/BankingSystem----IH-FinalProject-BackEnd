@@ -31,8 +31,8 @@ public class SecurityConfig {
     // UserDetailsService is an interface provided by Spring Security that defines a way to retrieve user information
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!I have commented these two lines, Dont know why, but now there is no Circular Dependency anymore !!!!!!!!!!!!!!
-//        @Autowired
-//        private UserDetailsService userDetailsService;
+    //@Autowired
+    //private UserDetailsService userDetailsService;
 
     // Autowired instance of the AuthenticationManagerBuilder
     @Autowired
