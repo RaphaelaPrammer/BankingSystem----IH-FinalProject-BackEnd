@@ -31,8 +31,8 @@ public class SecurityConfig {
     // UserDetailsService is an interface provided by Spring Security that defines a way to retrieve user information
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!!I have commented these two lines, Dont know why, but now there is no Circular Dependency anymore !!!!!!!!!!!!!!
-        @Autowired
-         private UserDetailsService userDetailsService;
+//        @Autowired
+//        private UserDetailsService userDetailsService;
 
     // Autowired instance of the AuthenticationManagerBuilder
     @Autowired
@@ -79,9 +79,10 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         // set up authorization for different request matchers and user roles
         http.authorizeHttpRequests((requests) -> requests
-                //.requestMatchers("/api/login/**").permitAll()
-               // .requestMatchers(GET, "/api/users").hasAnyAuthority("ROLE_USER")
-               // .requestMatchers(POST, "/api/users").hasAnyAuthority("ROLE_ADMIN")
+               // .requestMatchers("/api/login/**").permitAll()
+               //.requestMatchers( "/api/accountholder-area").hasAnyAuthority("ROLE_ACCOUNT-HOLDER")
+               //.requestMatchers("/api/third-party-area").hasAnyAuthority("ROLE_THIRD-PARTY")
+                //.requestMatchers("/api/admin-area").hasAnyAuthority("ROLE_ADMIN")
                 //.anyRequest().authenticated());
                         .anyRequest().permitAll());
         // add the custom authentication filter to the http security object

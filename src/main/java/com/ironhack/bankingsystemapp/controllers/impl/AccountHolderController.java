@@ -30,7 +30,12 @@ public class AccountHolderController {
 
 
 
-    //--------- Get Balance of Account --------------- ?????????????? with authentication ???
+    //--------- Get Balance of Account --------------- ?????????????? with authenticationprincipal ???
+//    @GetMapping("/accounts/my-balance")
+//    @ResponseStatus(HttpStatus.OK)
+//    public BigDecimal getBalance(@RequestParam Long accountId, @AuthenticationPrincipal UserDetails userDetails){
+//        return accountService.getBalanceAccountHolder(accountId, userDetails);
+//    }
     @GetMapping("/accounts/my-balance")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getBalance(@RequestParam Long accountId, @RequestParam Long ownerId){
@@ -73,8 +78,8 @@ public class AccountHolderController {
     // ----------- Transaction ----------------------??????????????? with USER DETAILS ??? --
     @PostMapping("/transaction")
     @ResponseStatus(HttpStatus.OK)
-    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
-        return transactionService.makeTransaction(transactionDTO);
+    public Account transferMoney(@RequestBody TransactionDTO transactionDTO, @AuthenticationPrincipal UserDetails userDetails){
+        return transactionService.makeTransaction(transactionDTO, userDetails);
     }
 
     @GetMapping("/transaction/all")

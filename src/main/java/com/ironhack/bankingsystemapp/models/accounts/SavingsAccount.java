@@ -107,6 +107,7 @@ public class SavingsAccount extends Account{
     }
 
     // PENALTY FEE - check if actual balance is greater than minimum Balance - if not (condition will be -1), the penalty fee will be deducted.
+    // this condition will be applied only after 3 months after the last application of the penalty fee
     public void applyPenaltyFeeSavings(){
         if(super.getBalance().compareTo(minimumBalance)<0){
             if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>3){

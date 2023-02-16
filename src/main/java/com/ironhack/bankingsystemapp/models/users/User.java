@@ -33,6 +33,7 @@ public abstract class User {
     private String password;
 
     @OneToMany(mappedBy ="user", fetch = FetchType.EAGER)
+   //@ManyToMany(fetch = EAGER)
     @JsonIgnore
     private Collection<Role> roles = new ArrayList<>();
 

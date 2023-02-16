@@ -1,20 +1,26 @@
 package com.ironhack.bankingsystemapp;
 
+import com.ironhack.bankingsystemapp.models.Transaction;
 import com.ironhack.bankingsystemapp.models.accounts.CheckingAccount;
 import com.ironhack.bankingsystemapp.models.accounts.CreditCard;
 import com.ironhack.bankingsystemapp.models.accounts.SavingsAccount;
+import com.ironhack.bankingsystemapp.models.accounts.StudentAccount;
 import com.ironhack.bankingsystemapp.models.users.*;
 import com.ironhack.bankingsystemapp.repositories.accounts.*;
 import com.ironhack.bankingsystemapp.repositories.users.*;
+import com.ironhack.bankingsystemapp.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+//_________________________________________________________________________
 @SpringBootApplication
 public class BankingSystemApplication implements CommandLineRunner{
 
@@ -42,7 +48,7 @@ public class BankingSystemApplication implements CommandLineRunner{
     @Autowired
     StudentAccountRepository studentAccountRepository;
 
-@Autowired
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
@@ -51,6 +57,35 @@ public class BankingSystemApplication implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
+
+        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
+        Address mailaddress =  new Address("Calle 2", "Madrid", "06000", "Spain");
+
+        AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("User1", "user1", "1234", LocalDate.of(1980, 01, 01), address));
+        AccountHolder accountHolder2 = accountHolderRepository.save(new AccountHolder("User2", "user2", "1234", LocalDate.of(2005, 01, 01), address, mailaddress));
+        ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("ThirdParty1", "thirdparty1", "1234", "ABC"));
+        Admin admin = adminRepository.save(new Admin("Admin1","admin1", "1234"));
+
+        CheckingAccount checkingAccount= checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder1, "ABC"));
+        StudentAccount studentAccount = studentAccountRepository.save(new StudentAccount(BigDecimal.valueOf(750), accountHolder2, "ABC"));
+        SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder1, "ABC"));
+        CreditCard creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder1));
+
+        //transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
+
+        Role role1 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder1));
+        Role role2 = roleRepository.save(new Role("THIRD-PARTY", thirdParty));
+        Role role3 = roleRepository.save(new Role("ADMIN", admin));
+        Role role4 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder2));
+
+
+
+
+
+
+
+
+        /*
         Admin admin1 = new Admin("admin1", "admin1", passwordEncoder.encode("1234"));
         adminRepository.save(admin1);
 
@@ -67,15 +102,6 @@ public class BankingSystemApplication implements CommandLineRunner{
         ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", passwordEncoder.encode("1234"), "superhashedkey" );
         thirdPartyRepository.save(thirdParty1);
 
-        Role role1 = new Role("ACCOUNT-HOLDER", accountHolder1);
-        Role role2 = new Role("THIRD-PARTY", thirdParty1);
-        Role role3 = new Role("ADMIN", admin1);
-        Role role4 = new Role("ACCOUNT-HOLDER", accountHolder2);
-        roleRepository.save(role1);
-        roleRepository.save(role2);
-        roleRepository.save(role3);
-        roleRepository.save(role4);
-
         CheckingAccount checkingAccount1 = new CheckingAccount(BigDecimal.valueOf(2000), accountHolder1,"abc");
         CheckingAccount checkingAccount2 = new CheckingAccount(BigDecimal.valueOf(50), accountHolder1,"abc");
         SavingsAccount savingsAccount1 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder1, "abc");
@@ -91,6 +117,7 @@ public class BankingSystemApplication implements CommandLineRunner{
         accountRepository.save(savingsAccount3);
         accountRepository.save(savingsAccount4);
         accountRepository.save(creditCard1);
+        */
 
 
     }
@@ -100,7 +127,7 @@ public class BankingSystemApplication implements CommandLineRunner{
 //    PasswordEncoder passwordEncoder() {
 //        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 //    }
-
+//
 //    @Bean
 //    CommandLineRunner run(UserService userService) {
 //        return args -> {
@@ -118,6 +145,12 @@ public class BankingSystemApplication implements CommandLineRunner{
 //            userService.addRoleToUser("chris", "ROLE_ADMIN");
 //            userService.addRoleToUser("chris", "ROLE_USER");
 //        };
- //   }
+//    }
 
 }
+
+
+
+
+
+

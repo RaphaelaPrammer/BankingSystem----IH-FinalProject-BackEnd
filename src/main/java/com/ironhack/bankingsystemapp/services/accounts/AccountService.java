@@ -5,6 +5,7 @@ import com.ironhack.bankingsystemapp.models.accounts.CheckingAccount;
 import com.ironhack.bankingsystemapp.models.accounts.CreditCard;
 import com.ironhack.bankingsystemapp.models.accounts.SavingsAccount;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
+import com.ironhack.bankingsystemapp.models.users.User;
 import com.ironhack.bankingsystemapp.repositories.accounts.AccountRepository;
 import com.ironhack.bankingsystemapp.repositories.accounts.CheckingAccountRepository;
 import com.ironhack.bankingsystemapp.repositories.accounts.CreditCardRepository;
@@ -13,6 +14,7 @@ import com.ironhack.bankingsystemapp.repositories.users.AccountHolderRepository;
 import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -91,7 +93,7 @@ public void deleteAccount(Long id){
 // get Balance
 
     // as Admin
-    public BigDecimal getBalance(Long accountId){
+    public BigDecimal requestBalance(Long accountId){
         Account account = accountRepository.findById(accountId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
 
         //check if its Savings Account, and apply interest rate:
@@ -135,21 +137,44 @@ public void deleteAccount(Long id){
     }
 
     // as AccountHolder
-    public BigDecimal getBalanceAccountHolder(Long accountId, Long ownerId){
-    // check if Account and Owner exist
-        Account account = accountRepository.findById(accountId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
-        AccountHolder owner = accountHolderRepository.findById(ownerId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no Account with this Account Holder Id"));
+
+    public BigDecimal getBalanceAccountHolder(Long accountId, Long ownerId) {
+        // check if Account and Owner exist
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
+        AccountHolder owner = accountHolderRepository.findById(ownerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no Account with this Account Holder Id"));
 
         // check if the owner ID corresponds to the accountId
-        if(account.getPrimaryOwner().getId()==ownerId || account.getSecondaryOwner().getId()==ownerId){
+        if (account.getPrimaryOwner().getId() == ownerId || account.getSecondaryOwner().getId() == ownerId) {
 
-            return getBalance(accountId);
+            return requestBalance(accountId);
 
-        }else{
+        } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "You don't have access to this account");
         }
-
     }
+
+    // CON USER DETAILS
+//    public BigDecimal getBalanceAccountHolder(Long accountId, UserDetails userDetails){
+//        AccountHolder user = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username does not match"));
+//
+//        Account account = null;
+//          //check if the given accountId matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
+//        for(Account a : user.getPrimaryAccounts()){
+//            if(a.getId() == accountId) {
+//                account = a;
+//            }else{
+//                throw new ResponseStatusException(HttpStatus.CONFLICT);
+//            }
+//        }
+//        for(Account a : user.getSecondaryAccounts()){
+//            if(a.getId() == accountId) {
+//                account = a;
+//            }else{
+//                throw new ResponseStatusException(HttpStatus.CONFLICT);
+//            }
+//        }
+//            return getBalance(account.getId());
+//    }
 
 
 

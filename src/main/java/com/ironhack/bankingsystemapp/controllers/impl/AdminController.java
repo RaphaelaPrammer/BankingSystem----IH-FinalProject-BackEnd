@@ -1,5 +1,6 @@
 package com.ironhack.bankingsystemapp.controllers.impl;
 
+import com.ironhack.bankingsystemapp.dtos.StudentAccCheckingAccDTO;
 import com.ironhack.bankingsystemapp.models.accounts.*;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import com.ironhack.bankingsystemapp.models.users.Admin;
@@ -75,11 +76,11 @@ public class AdminController {
     public Account getAccountById(@PathVariable Long id) {
         return accountService.findById(id);
     }
-    //-----------------does not work-------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     @GetMapping("/accounts")
     @ResponseStatus(HttpStatus.OK)
-    public Account getAccountByName(@RequestParam String ownerName) {
-        return accountService.findByName(ownerName);
+    public Account getAccountByName(@RequestParam String userName) {
+        return accountService.findByName(userName);
     }
 
 
@@ -95,7 +96,7 @@ public class AdminController {
      @GetMapping("/accounts/balance")
      @ResponseStatus(HttpStatus.OK)
      public BigDecimal getBalance(@RequestParam Long id){
-         return accountService.getBalance(id);
+         return accountService.requestBalance(id);
     }
     //--------- Modify Balance---------------
     @PatchMapping("/accounts/update-balance-add")
@@ -112,8 +113,8 @@ public class AdminController {
     //--------- create New Accounts---------------
     @PostMapping("/accounts/new/checking")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createCheckingAccount(@RequestBody CheckingAccount checkingAccount){
-        return checkingAccountService.createCheckingAccount(checkingAccount);
+    public Account createCheckingAccount(@RequestBody StudentAccCheckingAccDTO studentAccCheckingAccDTO){
+        return checkingAccountService.createCheckingAccount(studentAccCheckingAccDTO);
     }
     @PostMapping("/accounts/new/credit")
     @ResponseStatus(HttpStatus.CREATED)
@@ -128,8 +129,8 @@ public class AdminController {
     //-----------------does not work-------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @PostMapping("/accounts/new/student")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createStudentAccount(@RequestBody StudentAccount studentAccount){
-        return studentAccountService.createStudentAccount(studentAccount);
+    public Account createStudentAccount(@RequestBody StudentAccCheckingAccDTO studentAccCheckingAccDTO){
+        return studentAccountService.createStudentAccount(studentAccCheckingAccDTO);
     }
 
 
