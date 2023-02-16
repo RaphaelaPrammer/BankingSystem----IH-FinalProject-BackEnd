@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -191,12 +192,13 @@ public class AdminController {
 
 
     // ------------- find Role of User -----------
-//    @GetMapping("/roles/{userId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public String getRoleByUserId(@PathVariable Long userId){
-//        Role role = roleRepository.findByUserId(userId);
-//        String roleName = role.getRole();
-//        return roleName;
-//    }
+    @GetMapping("/roles/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<Role> getRoleByUserId(@PathVariable Long userId){
+
+        Collection<Role> roleList = userRepository.findById(userId).get().getRoles();
+
+        return roleList;
+    }
 
 }

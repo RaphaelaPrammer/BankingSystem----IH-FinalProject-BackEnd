@@ -96,7 +96,6 @@ public class BankingSystemApplication implements CommandLineRunner{
 
 
 
-
         /*
         Admin admin1 = new Admin("admin1", "admin1", passwordEncoder.encode("1234"));
         adminRepository.save(admin1);
