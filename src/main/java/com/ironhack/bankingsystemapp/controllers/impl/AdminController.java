@@ -2,10 +2,9 @@ package com.ironhack.bankingsystemapp.controllers.impl;
 
 import com.ironhack.bankingsystemapp.dtos.StudentAccCheckingAccDTO;
 import com.ironhack.bankingsystemapp.models.accounts.*;
-import com.ironhack.bankingsystemapp.models.users.AccountHolder;
-import com.ironhack.bankingsystemapp.models.users.Admin;
-import com.ironhack.bankingsystemapp.models.users.ThirdParty;
-import com.ironhack.bankingsystemapp.models.users.User;
+import com.ironhack.bankingsystemapp.models.users.*;
+import com.ironhack.bankingsystemapp.repositories.users.RoleRepository;
+import com.ironhack.bankingsystemapp.repositories.users.UserRepository;
 import com.ironhack.bankingsystemapp.services.accounts.*;
 import com.ironhack.bankingsystemapp.services.users.AccountHolderService;
 import com.ironhack.bankingsystemapp.services.users.AdminService;
@@ -42,6 +41,11 @@ public class AdminController {
     AccountHolderService accountHolderService;
     @Autowired
     ThirdPartyService thirdPartyService;
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
 
     // ------------------------------------------------------------------------
@@ -170,7 +174,7 @@ public class AdminController {
     @DeleteMapping("/users/delete")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void deleteUser(@RequestParam Long id){
-        userService.deleteUser(id);
+        userRepository.deleteById(id);
     }
 
     // --------- get Users ------------
@@ -185,5 +189,14 @@ public class AdminController {
         return userService.getUser(username);
     }
 
+
+    // ------------- find Role of User -----------
+    @GetMapping("/roles/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String getRoleByUserId(@PathVariable Long userId){
+        Role role = roleRepository.findByUserId(userId);
+        String roleName = role.getRole();
+        return roleName;
+    }
 
 }

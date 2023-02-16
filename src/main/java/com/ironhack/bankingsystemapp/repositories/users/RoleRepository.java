@@ -18,4 +18,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
      * @return The found Role entity or null if not found
      */
    Role findByRole(String role);
+
+   Role findByUserId(Long id);
 }
