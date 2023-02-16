@@ -13,6 +13,8 @@ import com.ironhack.bankingsystemapp.services.users.ThirdPartyService;
 import com.ironhack.bankingsystemapp.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -77,13 +79,18 @@ public class AdminController {
         return accountService.findById(id);
     }
 
-    @GetMapping("/accounts")
+    @GetMapping("/accounts/user")           // ONLY WORKS IF USER ONLY HAS 1 ACCOUNT
     @ResponseStatus(HttpStatus.OK)
-    public Account getAccountByName(@RequestParam String userName) {
+    public Account getAccountByUserName(@RequestParam String userName) {
         return accountService.findByName(userName);
     }
 
-
+    // --------- Get List of Accounts -----------
+    @GetMapping("/accounts/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Account> getListAccounts(@PathVariable Long userId){
+        return accountHolderService.getListOfAccountsById(userId);
+    }
 
     //--------- Delete Account ---------------
     @DeleteMapping("/accounts")

@@ -41,6 +41,8 @@ public class StudentAccountService {
 //        }
 //    }
 
+
+    // Create a new StudentAccount if age is below 24, otherwise checking account:
     // WITH DTO TEST
         public Account createStudentAccount (StudentAccCheckingAccDTO studentAccCheckingAccDTO){
         // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.

@@ -41,6 +41,7 @@ public class CheckingAccountService {
 //        } return checkingAccountRepository.save(checkingAccount);
 //    }
 
+// Create a new CheckingAccount  OR StudentAccount if age is below 24 WITH DTO:
     public Account createCheckingAccount (StudentAccCheckingAccDTO studentAccCheckingAccDTO){
         // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.
         AccountHolder owner = accountHolderRepository.findById(studentAccCheckingAccDTO.getPrimaryOwnerId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
