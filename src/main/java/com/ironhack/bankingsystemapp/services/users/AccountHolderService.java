@@ -1,10 +1,7 @@
 package com.ironhack.bankingsystemapp.services.users;
 
 import com.ironhack.bankingsystemapp.models.accounts.Account;
-import com.ironhack.bankingsystemapp.models.users.AccountHolder;
-import com.ironhack.bankingsystemapp.models.users.Address;
-import com.ironhack.bankingsystemapp.models.users.Role;
-import com.ironhack.bankingsystemapp.models.users.User;
+import com.ironhack.bankingsystemapp.models.users.*;
 import com.ironhack.bankingsystemapp.repositories.accounts.AccountRepository;
 import com.ironhack.bankingsystemapp.repositories.users.AccountHolderRepository;
 import com.ironhack.bankingsystemapp.repositories.users.RoleRepository;
@@ -36,9 +33,9 @@ public class AccountHolderService {
     // create an Account Holder User, encode the password, add it to the DB and add the Role "ACCOUNT-HOLDER" to it.
     public AccountHolder addAccountHolder(AccountHolder accountHolder){
         accountHolder.setPassword(passwordEncoder.encode(accountHolder.getPassword()));
-        userService.addRoleToUser(accountHolder.getUsername(),"ACCOUNT-HOLDER");
         AccountHolder newAccountHolder = accountHolderRepository.save(accountHolder);
-        //roleRepository.save(new Role("ACCOUNT-HOLDER", newAccountHolder));
+        Role role = roleRepository.findByRole("ACCOUNT-HOLDER");
+        newAccountHolder.getRoles().add(role);
 
         return newAccountHolder;
     }
