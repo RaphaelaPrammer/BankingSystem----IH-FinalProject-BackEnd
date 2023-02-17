@@ -166,7 +166,7 @@ public void deleteAccount(Long id){
 
     // TEST 2 IS WORKING !!!!!!!!
     public BigDecimal getBalanceAccountHolderTest2(Long accountId, Authentication authentication){
-        AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "FROM SERVICE"));
+        AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not Authorized"));
 
         Account account = null;
         //check if the given accountId matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.

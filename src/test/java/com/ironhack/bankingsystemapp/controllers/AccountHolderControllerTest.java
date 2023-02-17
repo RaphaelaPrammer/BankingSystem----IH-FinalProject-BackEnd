@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,7 +50,9 @@ public class AccountHolderControllerTest {
 
     @BeforeEach
     void setUp(){
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 //    @AfterEach
 //    public void tearDown(){
@@ -72,34 +75,54 @@ public class AccountHolderControllerTest {
         //System.out.println(mvcResult.getResolvedException());
     }
 
-    // MISSING AUTHENTICATION
+    // GET BALANCE WITH AUTHENTICATION
     @Test
-    public void shouldGetBalance() throws Exception {
+    public void shouldGetBalanceWithAuth() throws Exception {
         Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
-        AccountHolder accountHolderX = accountHolderRepository.save(new AccountHolder("User2Test", "user2test", "1234", LocalDate.of(1980, 01, 01), address)) ;
+        AccountHolder accountHolderX = accountHolderRepository.save(new AccountHolder("User2test", "user2test", "1234", LocalDate.of(1980, 01, 01), address)) ;
         SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),accountHolderX,"ABC"));
 
         String body = objectMapper.writeValueAsString(savingsAccount);
 
-        MvcResult mvcResult=mockMvc.perform(get("/api/accountholder-area/accounts/my-balance-without-auth")
-                        //.with(user("user2test").password("1234").roles("ACCOUNT-HOLDER"))
+        MvcResult mvcResult=mockMvc.perform(get("/api/accountholder-area/accounts/my-balance-with-auth")
+                        .with(user("user2test").password("1234").roles("ROLE_ACCOUNT-HOLDER"))
                         .param("accountId",savingsAccount.getId().toString())
-                        .param("ownerId", accountHolderX.getId().toString())
-                .content(body).contentType(MediaType.APPLICATION_JSON))
+                        //.param("ownerId", accountHolderX.getId().toString())
+                        .content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         //System.out.println(mvcResult.getResolvedException());
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains(BigDecimal.valueOf(1050).toString()));
     }
+    // GET BALANCE WITHOUT AUTHENTICATION - OK!
+//    @Test
+//    public void shouldGetBalanceWithoutAuth() throws Exception {
+//        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
+//        AccountHolder accountHolderX = accountHolderRepository.save(new AccountHolder("User2Test", "user2test", "1234", LocalDate.of(1980, 01, 01), address)) ;
+//        SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),accountHolderX,"ABC"));
+//
+//        String body = objectMapper.writeValueAsString(savingsAccount);
+//
+//        MvcResult mvcResult=mockMvc.perform(get("/api/accountholder-area/accounts/my-balance-without-auth")
+//                        //.with(user("user2test").password("1234").roles("ACCOUNT-HOLDER"))
+//                        .param("accountId",savingsAccount.getId().toString())
+//                        .param("ownerId", accountHolderX.getId().toString())
+//                .content(body).contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//        //System.out.println(mvcResult.getResolvedException());
+//        System.out.println(mvcResult.getResponse().getContentAsString());
+//        assertTrue(mvcResult.getResponse().getContentAsString().contains(BigDecimal.valueOf(1050).toString()));
+//    }
 
-    // MISSING AUTHENTICATION , Otherwise Test OKAY!!
+    // TRANSFER MONEY WITH AUTHENTICATION !! ----------- NOT WORKING :/
     @Test
-    public void shouldTransferMoney() throws Exception {
+    public void shouldTransferMoneyWithAuth() throws Exception {
         Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
         // Sender Account and Accountholder
         AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
-        SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),senderAccountHolder,"ABC"));
+        SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2100),senderAccountHolder,"ABC"));
 
         // Reveiver Account and Accountholder
         AccountHolder receiverAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
@@ -110,13 +133,39 @@ public class AccountHolderControllerTest {
 
         String body = objectMapper.writeValueAsString(transactionTest);
 
-        MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-without-auth").content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-with-auth")
+                        .with(user("user3test").password("1234").roles("ROLE_ACCOUNT-HOLDER"))
+                        .content(body).contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
-       assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1950.00"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":2000.00"));
 
     }
+    // TRANSFER MONEY WITHOUT AUTHENTICATION , Otherwise Test OKAY!!
+//    @Test
+//    public void shouldTransferMoneyWithoutAuth() throws Exception {
+//        Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
+//        // Sender Account and Accountholder
+//        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+//        SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),senderAccountHolder,"ABC"));
+//
+//        // Reveiver Account and Accountholder
+//        AccountHolder receiverAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+//        SavingsAccount receiverAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),receiverAccountHolder,"ABC"));
+//
+//        // Transaction from
+//        TransactionDTO transactionTest = new TransactionDTO(senderAccount.getId(), receiverAccount.getId(),receiverAccountHolder.getName(),BigDecimal.valueOf(100));
+//
+//        String body = objectMapper.writeValueAsString(transactionTest);
+//
+//        MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-without-auth").content(body).contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//        System.out.println(mvcResult.getResponse().getContentAsString());
+//       assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1950.00"));
+//
+//    }
 
 
 

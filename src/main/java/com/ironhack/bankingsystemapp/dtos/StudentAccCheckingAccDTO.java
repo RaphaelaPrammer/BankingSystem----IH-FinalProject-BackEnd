@@ -27,6 +27,13 @@ public class StudentAccCheckingAccDTO {
     public StudentAccCheckingAccDTO() {
     }
 
+    public StudentAccCheckingAccDTO(BigDecimal balance, Long primaryOwnerId, String secretKey) {
+        this.balance = balance;
+        this.primaryOwnerId = primaryOwnerId;
+        this.secretKey = secretKey;
+        this.creationDate=LocalDate.now();
+        this.status = Status.ACTIVE;
+    }
     public StudentAccCheckingAccDTO(BigDecimal balance, Long primaryOwnerId, Long secondaryOwnerId, String secretKey) {
         this.balance = balance;
         this.primaryOwnerId = primaryOwnerId;

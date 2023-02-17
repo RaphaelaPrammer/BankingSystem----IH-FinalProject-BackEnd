@@ -39,13 +39,13 @@ public class TransactionService {
     AccountHolderRepository accountHolderRepository;
 
 
-    public Account makeTransaction(TransactionDTO transactionDTO, Authentication authentication){
+    public Account makeTransactionWithAUTH(TransactionDTO transactionDTO, Authentication authentication){
         // get the receiving account from the DTO.
         Account receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
 
-        // with userDetails
-//         get the sender from the userDetails
-       AccountHolder sender = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found "));
+        // with Authentication
+
+       AccountHolder sender = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized "));
        //check if the senderId from the transactionDTO matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
         Account senderAccount1=null;
        for(Account pa : sender.getPrimaryAccounts()){

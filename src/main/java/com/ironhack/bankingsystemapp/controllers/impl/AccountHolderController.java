@@ -34,14 +34,9 @@ public class AccountHolderController {
     AccountHolderRepository accountHolderRepository;
 
 
-    //--------- Get Balance of Account --------------- ?????????????? with authenticationprincipal ???
-//    @GetMapping("/accounts/my-balance-test")
-//    @ResponseStatus(HttpStatus.OK)
-//    public BigDecimal getBalanceTest(@RequestParam Long accountId, @AuthenticationPrincipal UserDetails userDetails){
-//        return accountService.getBalanceAccountHolderTest(accountId, userDetails);
-//    }
+
     //--------- Get Balance of Account WITH AUTH------------!!!!!!!!!!! WORKING---
-    @GetMapping("/accounts/my-balance-test2")
+    @GetMapping("/accounts/my-balance-with-auth")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getBalanceTest2(@RequestParam Long accountId,Authentication authentication){
         return accountService.getBalanceAccountHolderTest2(accountId, authentication);
@@ -87,10 +82,10 @@ public class AccountHolderController {
     }
 
     // ----------- Transaction ----------------------??????????????? with AUTH?? --
-    @PostMapping("/transaction")
+    @PostMapping("/transaction-with-auth")
     @ResponseStatus(HttpStatus.OK)
     public Account transferMoney(@RequestBody TransactionDTO transactionDTO, Authentication authentication){
-        return transactionService.makeTransaction(transactionDTO, authentication);
+        return transactionService.makeTransactionWithAUTH(transactionDTO, authentication);
     }
     // ----------- Transaction  WITHOUT AUTH -------------------------
     @PostMapping("/transaction-without-auth")
