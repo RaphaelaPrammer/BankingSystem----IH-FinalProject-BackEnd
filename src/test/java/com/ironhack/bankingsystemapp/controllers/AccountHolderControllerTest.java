@@ -85,7 +85,7 @@ public class AccountHolderControllerTest {
         String body = objectMapper.writeValueAsString(savingsAccount);
 
         MvcResult mvcResult=mockMvc.perform(get("/api/accountholder-area/accounts/my-balance-with-auth")
-                        .with(user("user2test").password("1234").roles("ROLE_ACCOUNT-HOLDER"))
+                        .with(user("user2test").password("1234").roles("ACCOUNT-HOLDER"))
                         .param("accountId",savingsAccount.getId().toString())
                         //.param("ownerId", accountHolderX.getId().toString())
                         .content(body).contentType(MediaType.APPLICATION_JSON))

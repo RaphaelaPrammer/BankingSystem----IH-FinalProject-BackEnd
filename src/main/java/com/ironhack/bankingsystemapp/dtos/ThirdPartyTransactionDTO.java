@@ -14,12 +14,12 @@ public class ThirdPartyTransactionDTO {
     public ThirdPartyTransactionDTO() {
     }
 
-    public ThirdPartyTransactionDTO(Long thirdPartyId, BigDecimal amount, Long accountId, String secretKey, LocalDateTime transactionDate) {
+    public ThirdPartyTransactionDTO(Long thirdPartyId, BigDecimal amount, Long accountId, String secretKey) {
         this.thirdPartyId = thirdPartyId;
         this.amount = amount;
         this.accountId = accountId;
         this.secretKey = secretKey;
-        this.transactionDate = transactionDate;
+
     }
 
     public Long getThirdPartyId() {
