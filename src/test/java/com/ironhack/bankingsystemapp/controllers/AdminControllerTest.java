@@ -11,14 +11,12 @@ import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import com.ironhack.bankingsystemapp.models.users.Address;
 import com.ironhack.bankingsystemapp.models.users.Admin;
 import com.ironhack.bankingsystemapp.models.users.ThirdParty;
-import com.ironhack.bankingsystemapp.repositories.accounts.CheckingAccountRepository;
-import com.ironhack.bankingsystemapp.repositories.accounts.CreditCardRepository;
-import com.ironhack.bankingsystemapp.repositories.accounts.SavingsAccountRepository;
-import com.ironhack.bankingsystemapp.repositories.accounts.StudentAccountRepository;
+import com.ironhack.bankingsystemapp.repositories.accounts.*;
 import com.ironhack.bankingsystemapp.repositories.users.AccountHolderRepository;
 import com.ironhack.bankingsystemapp.repositories.users.AdminRepository;
 import com.ironhack.bankingsystemapp.repositories.users.ThirdPartyRepository;
 import com.ironhack.bankingsystemapp.repositories.users.UserRepository;
+import com.ironhack.bankingsystemapp.services.users.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +41,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+//-----------------------------------------------------
+// Tests work individually, but not when the class is being executed
+//-----------------------------------------------------
 @SpringBootTest
 public class AdminControllerTest {
     @Autowired
@@ -63,6 +65,10 @@ public class AdminControllerTest {
     AdminRepository adminRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    AccountRepository accountRepository;
+    @Autowired
+    UserService userService;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -71,8 +77,18 @@ public class AdminControllerTest {
     @BeforeEach
     void setUp(){
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
                 .build();
+
     }
+    void setAdmin(){
+        Admin admin0 = userRepository.save(new Admin("Admin0", "admin0", "0000")) ;
+        userService.addRoleToUser("admin0","ADMIN");
+}
+
+    //-----------------------------------------------------
+    // Tests work individually, but not when the class is being executed
+    //-----------------------------------------------------
 
     @Test
     public void shouldCreateThirdParty() throws Exception {
@@ -80,6 +96,7 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(newThirdParty);
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/users/new/thirdparty")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                 .content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -95,9 +112,10 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(accountHolderX);
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/users/new/accountholder")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .andExpect(status().isCreated())
+                        .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("User1Test"));
         assertEquals("User1Test",accountHolderRepository.findByUsername("user1test").get().getName());
         //System.out.println(mvcResult.getResolvedException());
@@ -109,9 +127,10 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(admin);
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/users/new/admin")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .andExpect(status().isCreated())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Admin1Test"));
         assertEquals("Admin1Test",adminRepository.findByUsername("admin1test").get().getName());
@@ -127,10 +146,11 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(admin);
         MvcResult mvcResult = mockMvc.perform(delete("/api/admin-area/users/delete")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .param("id", admin.getId().toString())
                         .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
+                        .andExpect(status().is4xxClientError())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         System.out.println(adminRepository.findAll().size());
         assertEquals(0, adminRepository.findAll().size());
@@ -141,9 +161,10 @@ public class AdminControllerTest {
         Admin admin = adminRepository.save(new Admin("Admin2Test", "admin2test", "1234") ) ;
         Admin admin1 = adminRepository.save(new Admin("Admin2Test", "admin2test", "1234") ) ;
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/admin-area/users/all"))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult mvcResult = mockMvc.perform(get("/api/admin-area/users/all")
+                        .with(user("admin0").password("0000").roles("ADMIN")))
+                        .andExpect(status().isOk())
+                        .andReturn();
         System.out.println(userRepository.findAll().size());
         assertEquals(2, userRepository.findAll().size());
     }
@@ -157,9 +178,10 @@ public class AdminControllerTest {
         String body = objectMapper.writeValueAsString(checkingAccountDTO);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/accounts/new/checking")
-                 .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .with(user("admin0").password("0000").roles("ADMIN"))
+                         .content(body).contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isCreated())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1000"));
         assertEquals(1,checkingAccountRepository.findAll().size());
@@ -175,6 +197,7 @@ public class AdminControllerTest {
         String body = objectMapper.writeValueAsString(checkingAccountDTO);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/accounts/new/checking")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isCreated())
                         .andReturn();
@@ -195,6 +218,7 @@ public class AdminControllerTest {
         String body = objectMapper.writeValueAsString(checkingAccountDTO);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/accounts/new/student")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isCreated())
                         .andReturn();
@@ -211,9 +235,10 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(newCrediCard);
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/accounts/new/credit")
-                 .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .with(user("admin0").password("0000").roles("ADMIN"))
+                         .content(body).contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isCreated())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1050"));
         assertEquals(1,creditCardRepository.findAll().size());
@@ -227,9 +252,10 @@ public class AdminControllerTest {
 
         String body = objectMapper.writeValueAsString(savingsAccount);
         MvcResult mvcResult = mockMvc.perform(post("/api/admin-area/accounts/new/savings")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+                        .andExpect(status().isCreated())
+                        .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1050"));
         assertEquals(1,savingsAccountRepository.findAll().size());
@@ -248,6 +274,7 @@ public class AdminControllerTest {
        String body = objectMapper.writeValueAsString(savingsAccount1);
 
        MvcResult mvcResult = mockMvc.perform(delete("/api/admin-area/accounts")
+                 .with(user("admin0").password("0000").roles("ADMIN"))
                 .param("id", savingsAccount1.getId().toString()))
                .andExpect(status().isNotFound())
                .andReturn();
@@ -267,6 +294,7 @@ public class AdminControllerTest {
 
 
         MvcResult mvcResult = mockMvc.perform(patch("/api/admin-area/accounts/update-balance-add")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .param("id", savingsAccount3.getId().toString())
                         .param("amount", BigDecimal.valueOf(50).toString()))
                         .andExpect(status().isOk())
@@ -283,6 +311,7 @@ public class AdminControllerTest {
         SavingsAccount savingsAccount4 = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),savingsAccountHolder,"ABC"));
 
         MvcResult mvcResult = mockMvc.perform(patch("/api/admin-area/accounts/update-balance-subtract")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .param("id", savingsAccount4.getId().toString())
                         .param("amount", BigDecimal.valueOf(50).toString()))
                         .andExpect(status().isOk())
@@ -298,6 +327,7 @@ public class AdminControllerTest {
         SavingsAccount savingsAccount5 = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),accountHolderX,"ABC"));
 
         MvcResult mvcResult=mockMvc.perform(get("/api/admin-area/accounts/balance")
+                        .with(user("admin0").password("0000").roles("ADMIN"))
                         .param("id",savingsAccount5.getId().toString()))
                         .andExpect(status().isOk())
                         .andReturn();
