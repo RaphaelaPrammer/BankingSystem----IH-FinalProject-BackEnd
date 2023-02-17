@@ -83,8 +83,8 @@ public class SecurityConfig {
                .requestMatchers( "/api/accountholder-area/**").hasAnyAuthority("ROLE_ACCOUNT-HOLDER")
                .requestMatchers("/api/third-party-area/**").hasAnyAuthority("ROLE_THIRD-PARTY")
                 .requestMatchers("/api/admin-area/**").hasAnyAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated());
-//                        .anyRequest().permitAll());
+                //.anyRequest().authenticated());
+                        .anyRequest().permitAll());
         // add the custom authentication filter to the http security object
         http.addFilter(customAuthenticationFilter);
         // Add the custom authorization filter before the standard authentication filter.

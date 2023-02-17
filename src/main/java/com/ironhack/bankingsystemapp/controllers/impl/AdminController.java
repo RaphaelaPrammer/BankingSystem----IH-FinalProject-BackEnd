@@ -138,7 +138,7 @@ public class AdminController {
     public Account createSavingsAccount(@RequestBody SavingsAccount savingsAccount){
         return savingsAccountService.createSavingsAccount(savingsAccount);
     }
-    //-----------------does not work-------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     @PostMapping("/accounts/new/student")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createStudentAccount(@RequestBody StudentAccCheckingAccDTO studentAccCheckingAccDTO){

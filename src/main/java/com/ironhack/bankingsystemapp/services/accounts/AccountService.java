@@ -163,50 +163,26 @@ public void deleteAccount(Long id){
         }
     }
 
-    // TEST1 - With USER DETAILS - NOT WORKING !!!!
-//    public BigDecimal getBalanceAccountHolderTest(Long accountId, UserDetails userDetails){
-//        AccountHolder user = accountHolderRepository.findByUsername(userDetails.getUsername()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username does not match"));
-//
-//        Account account = null;
-//          //check if the given accountId matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
-//        for(Account a : user.getPrimaryAccounts()){
-//            if(a.getId() == accountId) {
-//                account = a;
-//            }else{
-//                throw new ResponseStatusException(HttpStatus.CONFLICT);
-//            }
-//        }
-//        for(Account a : user.getSecondaryAccounts()){
-//            if(a.getId() == accountId) {
-//                account = a;
-//            }else{
-//                throw new ResponseStatusException(HttpStatus.CONFLICT);
-//            }
-//        }
-//            return requestBalance(account.getId());
-//    }
 
     // TEST 2 IS WORKING !!!!!!!!
     public BigDecimal getBalanceAccountHolderTest2(Long accountId, Authentication authentication){
-        AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).get();
+        AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "FROM SERVICE"));
 
         Account account = null;
         //check if the given accountId matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
         for(Account a : user.getPrimaryAccounts()){
             if(a.getId().equals(accountId)) {
                 return requestBalance(accountId);
-            }else{
-                throw new ResponseStatusException(HttpStatus.CONFLICT);
+                //return accountRepository.findById(a.getId()).get().getBalance();
             }
         }
         for(Account a : user.getSecondaryAccounts()){
             if(a.getId().equals(accountId)) {
-                return requestBalance(accountId);
-            }else{
-                throw new ResponseStatusException(HttpStatus.CONFLICT);
+               return requestBalance(accountId);
+                //return accountRepository.findById(a.getId()).get().getBalance();
             }
         }
-        return BigDecimal.valueOf(0);
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
     }
 
 

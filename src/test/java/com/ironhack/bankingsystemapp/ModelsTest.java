@@ -37,6 +37,8 @@
 //    @Autowired
 //    ThirdPartyRepository thirdPartyRepository;
 //    @Autowired
+//    AccountRepository accountRepository;
+//    @Autowired
 //    CheckingAccountRepository checkingAccountRepository;
 //    @Autowired
 //    StudentAccountRepository studentAccountRepository;
@@ -56,36 +58,37 @@
 //    CreditCard creditCard;
 //    SavingsAccount savingsAccount;
 //    Transaction transaction;
+////
+////    @BeforeEach
+////    public void setUp(){
+////
+////        address = new Address("Calle 1", "Barcelona", "08000", "Spain");
+////        mailaddress =  new Address("Calle 1", "Barcelona", "08000", "Spain");
+////
+////        accountHolder = accountHolderRepository.save(new AccountHolder("User1", "user1", "1234", LocalDate.of(1980, 01, 01), address));
+////        accountHolder2 = accountHolderRepository.save(new AccountHolder("User2", "user2", "1234", LocalDate.of(1980, 01, 01), address, mailaddress));
+////        thirdParty = thirdPartyRepository.save(new ThirdParty("ThirdParty1", "thirdparty1", "1234", "ABC"));
+////        admin = adminRepository.save(new Admin("Admin2","admin2", "1234"));
+////
+////        checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "ABC"));
+////        studentAccount = studentAccountRepository.save(new StudentAccount(BigDecimal.valueOf(750), accountHolder2, "ABC"));
+////        savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder, "ABC"));
+////        creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder));
+////
+////        transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
+////    }
 //
-//    @BeforeEach
-//    public void setUp(){
-//        address = new Address("Calle 1", "Barcelona", "08000", "Spain");
-//        mailaddress =  new Address("Calle 1", "Barcelona", "08000", "Spain");
-//
-//        accountHolder = accountHolderRepository.save(new AccountHolder("User1", "user1", "1234", LocalDate.of(1980, 01, 01), address));
-//        accountHolder2 = accountHolderRepository.save(new AccountHolder("User2", "user2", "1234", LocalDate.of(1980, 01, 01), address, mailaddress));
-//        thirdParty = thirdPartyRepository.save(new ThirdParty("ThirdParty1", "thirdparty1", "1234", "ABC"));
-//        admin = adminRepository.save(new Admin("Admin2","admin2", "1234"));
-//
-//        checkingAccount = checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder, "ABC"));
-//        studentAccount = studentAccountRepository.save(new StudentAccount(BigDecimal.valueOf(750), accountHolder2, "ABC"));
-//        savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder, "ABC"));
-//        creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder));
-//
-//        transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
-//    }
-//
-//    @AfterEach
-//        public void tearDown(){
-//        accountHolderRepository.deleteAll();
-//        thirdPartyRepository.deleteAll();
-//        adminRepository.deleteAll();
-//        checkingAccountRepository.deleteAll();
-//        studentAccountRepository.deleteAll();
-//        savingsAccountRepository.deleteAll();
-//        creditCardRepository.deleteAll();
-//        transactionRepository.deleteAll();
-//}
+////    @AfterEach
+////        public void tearDown(){
+////        accountHolderRepository.deleteAll();
+////        thirdPartyRepository.deleteAll();
+////        adminRepository.deleteAll();
+////        checkingAccountRepository.deleteAll();
+////        studentAccountRepository.deleteAll();
+////        savingsAccountRepository.deleteAll();
+////        creditCardRepository.deleteAll();
+////        transactionRepository.deleteAll();
+////}
 //    @Test
 //    @DisplayName("createAdmin")
 //    public void shouldCreateAdmin(){
@@ -109,11 +112,25 @@
 //        assertEquals(4,userRepository.findAll().size());
 //        assertEquals("Admin1", userRepository.findByUsername("admin1").getName());
 //    }
-//
+//    @Test
+//    @DisplayName("deleteUser")
+//    public void shouldDeleteUserById(){
+//        userRepository.deleteById(1L);
+//        assertEquals(3, userRepository.findAll().size());
+//    }
 //    @Test
 //    @DisplayName("createAccounts")
 //    public void shouldCreateAccounts(){
-//        assertEquals(4, accountHolderRepository.findAll().size());
+//        assertEquals(4, accountRepository.findAll().size());
 //    }
+//
+//    @Test
+//    @DisplayName("deleteAccount")
+//    public void shouldDeleteAccountById(){
+//        accountRepository.deleteById(1L);
+//        assertEquals(3, accountRepository.findAll().size());
+//    }
+//
+//
 //
 //}

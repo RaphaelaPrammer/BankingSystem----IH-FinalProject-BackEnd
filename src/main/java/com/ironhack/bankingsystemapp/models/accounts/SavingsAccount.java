@@ -128,9 +128,12 @@ public class SavingsAccount extends Account{
         }
     }
 
-
-
-
-
-
+//    @Override
+//    public void setBalance(BigDecimal balance) {
+//        if(Period.between(lastInterestRateApplied,LocalDate.now()).getYears()>1){
+//            super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate)));
+//            // reset the lastInterestRateApplied Date
+//            setLastInterestRateApplied(LocalDate.now());
+//        }
+//    }
 }

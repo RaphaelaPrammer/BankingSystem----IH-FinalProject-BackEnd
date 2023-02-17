@@ -49,6 +49,8 @@ public class BankingSystemApplication implements CommandLineRunner{
     CreditCardRepository creditCardRepository;
     @Autowired
     StudentAccountRepository studentAccountRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -76,12 +78,10 @@ public class BankingSystemApplication implements CommandLineRunner{
         savingsAccount.setCreationDate(LocalDate.of(2020,01,01));
         savingsAccount.setLastInterestRateApplied(LocalDate.of(2022,02,01));
         savingsAccountRepository.save(savingsAccount);
-        //transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
 
-//        Role role1 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder1));
-//        Role role2 = roleRepository.save(new Role("THIRD-PARTY", thirdParty));
-//        Role role3 = roleRepository.save(new Role("ADMIN", admin));
-//        Role role4 = roleRepository.save(new Role("ACCOUNT-HOLDER", accountHolder2));
+        Transaction transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
+
+
          roleRepository.save(new Role("ACCOUNT-HOLDER"));
          roleRepository.save(new Role("THIRD-PARTY"));
          roleRepository.save(new Role("ADMIN"));
@@ -96,40 +96,6 @@ public class BankingSystemApplication implements CommandLineRunner{
         System.out.println(userRepository.findByUsername("admin1").getRoles().toString());
 
 
-
-        /*
-        Admin admin1 = new Admin("admin1", "admin1", passwordEncoder.encode("1234"));
-        adminRepository.save(admin1);
-
-        Address address1 = new Address("Calle 1","Barcelona","08020", "Spain");
-        Address mailaddress1 = new Address("mailaddress 1","Madrid","00000", "Spain");
-
-        AccountHolder accountHolder1 = new AccountHolder("Max Mustermann", "maxmustermann", passwordEncoder.encode("1234"),LocalDate.of(1980,1,1),address1, mailaddress1);
-
-        AccountHolder accountHolder2 = new AccountHolder("Gustav", "gustav", passwordEncoder.encode("1234"),LocalDate.of(1980,1,1),address1, mailaddress1);
-
-        accountHolderRepository.save(accountHolder1);
-        accountHolderRepository.save(accountHolder2);
-
-        ThirdParty thirdParty1 = new ThirdParty("thirdPartyName", "thirdpartyusername", passwordEncoder.encode("1234"), "superhashedkey" );
-        thirdPartyRepository.save(thirdParty1);
-
-        CheckingAccount checkingAccount1 = new CheckingAccount(BigDecimal.valueOf(2000), accountHolder1,"abc");
-        CheckingAccount checkingAccount2 = new CheckingAccount(BigDecimal.valueOf(50), accountHolder1,"abc");
-        SavingsAccount savingsAccount1 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder1, "abc");
-        SavingsAccount savingsAccount2 = new SavingsAccount(BigDecimal.valueOf(2000), accountHolder2, "abc", BigDecimal.valueOf(100), BigDecimal.valueOf(0.01));
-        SavingsAccount savingsAccount3 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder1, "abcdef", BigDecimal.valueOf(10), BigDecimal.valueOf(0.7));
-        SavingsAccount savingsAccount4 = new SavingsAccount(BigDecimal.valueOf(4000), accountHolder2, "abcdef", BigDecimal.valueOf(5000), BigDecimal.valueOf(0.001));
-        checkingAccount1.setCreationDate(LocalDate.of(2022,01,13));
-        CreditCard creditCard1 = new CreditCard(BigDecimal.valueOf(3000), accountHolder2);
-        accountRepository.save(checkingAccount1);
-        accountRepository.save(checkingAccount2);
-        accountRepository.save(savingsAccount1);
-        accountRepository.save(savingsAccount2);
-        accountRepository.save(savingsAccount3);
-        accountRepository.save(savingsAccount4);
-        accountRepository.save(creditCard1);
-        */
 
 
     }

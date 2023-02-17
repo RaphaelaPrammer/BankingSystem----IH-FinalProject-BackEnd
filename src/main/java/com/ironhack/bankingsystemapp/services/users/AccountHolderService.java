@@ -51,7 +51,7 @@ public class AccountHolderService {
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).get();
         String username = user.getUsername();
         // check if there is a user with the given username
-        AccountHolder accountHolder1 = accountHolderRepository.findByUsername(username)
+        AccountHolder accountHolder1 = accountHolderRepository.findById(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found"));
 
         // get the List of the primary Accounts with this id

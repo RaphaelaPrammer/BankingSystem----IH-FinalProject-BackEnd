@@ -47,7 +47,7 @@ public class AccountHolderController {
         return accountService.getBalanceAccountHolderTest2(accountId, authentication);
     }
     //--------- Get Balance of Account WITHOUT AUTH---------------
-    @GetMapping("/accounts/my-balance")
+    @GetMapping("/accounts/my-balance-without-auth")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getBalance(@RequestParam Long accountId, @RequestParam Long ownerId){
         return accountService.getBalanceAccountHolder(accountId, ownerId);
@@ -60,12 +60,12 @@ public class AccountHolderController {
     public List<Account> getListAccounts(Authentication authentication){
         return accountHolderService.getListOfAccountsByUsername(authentication);
     }
-    // --------- Get List of Accounts  WITHOUT AUTHENTICATION-----------
-//    @GetMapping("/accounts/")
-//    @ResponseStatus(HttpStatus.OK)
-//            public List<Account> getAccounts(@RequestParam Long UserId){
-//           return accountHolderService.getListOfAccountsById(UserId);
-//    }
+    // --------- Get List of Accounts  WITHOUT AUTHENTICATION-------!!!!!NOT WORKING----
+    @GetMapping("/accounts/")
+    @ResponseStatus(HttpStatus.OK)
+            public List<Account> getAccounts(@RequestParam Long UserId){
+           return accountHolderService.getListOfAccountsById(UserId);
+    }
 
    // ----------- Update Account Info -------------
     @PatchMapping("/add-mailing-address")
@@ -73,7 +73,7 @@ public class AccountHolderController {
     public AccountHolder addMailingAddress(@RequestParam Long id, @RequestBody Address mailAddress){
         return accountHolderService.addMailingAddress(id, mailAddress);
     }
-    @PatchMapping("/update-address")
+    @PutMapping("/update-address")
     @ResponseStatus(HttpStatus.OK)
     public AccountHolder updateAddressInfo(@RequestParam Long id, @RequestBody Address address){
         return accountHolderService.updateAddressInfo(id, address);
@@ -86,11 +86,17 @@ public class AccountHolderController {
         return accountHolderService.addAccountHolder(accountHolder);
     }
 
-    // ----------- Transaction ----------------------??????????????? with USER DETAILS ??? --
+    // ----------- Transaction ----------------------??????????????? with AUTH?? --
     @PostMapping("/transaction")
     @ResponseStatus(HttpStatus.OK)
     public Account transferMoney(@RequestBody TransactionDTO transactionDTO, Authentication authentication){
         return transactionService.makeTransaction(transactionDTO, authentication);
+    }
+    // ----------- Transaction  WITHOUT AUTH -------------------------
+    @PostMapping("/transaction-without-auth")
+    @ResponseStatus(HttpStatus.OK)
+    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
+        return transactionService.makeTransactionWithoutAUTH(transactionDTO);
     }
 
 //    @GetMapping("/transaction/all")
