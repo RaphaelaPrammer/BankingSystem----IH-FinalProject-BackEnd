@@ -62,38 +62,38 @@ public class BankingSystemApplication implements CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
 
-        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
-        Address mailaddress =  new Address("Calle 2", "Madrid", "06000", "Spain");
-
-        AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("User1", "user1", passwordEncoder.encode("1234"), LocalDate.of(1980, 01, 01), address));
-        AccountHolder accountHolder2 = accountHolderRepository.save(new AccountHolder("User2", "user2", passwordEncoder.encode("1234"), LocalDate.of(2005, 01, 01), address, mailaddress));
-        ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("ThirdParty1", "thirdparty1", passwordEncoder.encode("1234"), "ABC"));
-        Admin admin = adminRepository.save(new Admin("Admin1","admin1", passwordEncoder.encode("1234")));
-
-        CheckingAccount checkingAccount= checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder1, "ABC"));
-        StudentAccount studentAccount = studentAccountRepository.save(new StudentAccount(BigDecimal.valueOf(750), accountHolder2, "ABC"));
-        SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder1, "ABC"));
-        CreditCard creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder1));
-
-        savingsAccount.setCreationDate(LocalDate.of(2020,01,01));
-        savingsAccount.setLastInterestRateApplied(LocalDate.of(2022,02,01));
-        savingsAccountRepository.save(savingsAccount);
-
-        Transaction transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
-
-
-         roleRepository.save(new Role("ACCOUNT-HOLDER"));
-         roleRepository.save(new Role("THIRD-PARTY"));
-         roleRepository.save(new Role("ADMIN"));
-
-         userService.addRoleToUser("admin1", "ADMIN");
-        userService.addRoleToUser("admin1", "ACCOUNT-HOLDER");
-        userService.addRoleToUser("user1", "ACCOUNT-HOLDER");
-        userService.addRoleToUser("user2", "ACCOUNT-HOLDER");
-        userService.addRoleToUser("thirdparty1", "THIRD-PARTY");
-
-
-        System.out.println(userRepository.findByUsername("admin1").getRoles().toString());
+//        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
+//        Address mailaddress =  new Address("Calle 2", "Madrid", "06000", "Spain");
+//
+//        AccountHolder accountHolder1 = accountHolderRepository.save(new AccountHolder("User1", "user1", passwordEncoder.encode("1234"), LocalDate.of(1980, 01, 01), address));
+//        AccountHolder accountHolder2 = accountHolderRepository.save(new AccountHolder("User2", "user2", passwordEncoder.encode("1234"), LocalDate.of(2005, 01, 01), address, mailaddress));
+//        ThirdParty thirdParty = thirdPartyRepository.save(new ThirdParty("ThirdParty1", "thirdparty1", passwordEncoder.encode("1234"), "ABC"));
+//        Admin admin = adminRepository.save(new Admin("Admin1","admin1", passwordEncoder.encode("1234")));
+//
+//        CheckingAccount checkingAccount= checkingAccountRepository.save(new CheckingAccount(BigDecimal.valueOf(1000), accountHolder1, "ABC"));
+//        StudentAccount studentAccount = studentAccountRepository.save(new StudentAccount(BigDecimal.valueOf(750), accountHolder2, "ABC"));
+//        SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder1, "ABC"));
+//        CreditCard creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder1));
+//
+//        savingsAccount.setCreationDate(LocalDate.of(2020,01,01));
+//        savingsAccount.setLastInterestRateApplied(LocalDate.of(2022,02,01));
+//        savingsAccountRepository.save(savingsAccount);
+//
+//        Transaction transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
+//
+//
+//         roleRepository.save(new Role("ACCOUNT-HOLDER"));
+//         roleRepository.save(new Role("THIRD-PARTY"));
+//         roleRepository.save(new Role("ADMIN"));
+//
+//         userService.addRoleToUser("admin1", "ADMIN");
+//        userService.addRoleToUser("admin1", "ACCOUNT-HOLDER");
+//        userService.addRoleToUser("user1", "ACCOUNT-HOLDER");
+//        userService.addRoleToUser("user2", "ACCOUNT-HOLDER");
+//        userService.addRoleToUser("thirdparty1", "THIRD-PARTY");
+//
+//
+//        System.out.println(userRepository.findByUsername("admin1").getRoles().toString());
 
 
 
