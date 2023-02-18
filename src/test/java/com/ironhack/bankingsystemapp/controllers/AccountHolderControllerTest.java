@@ -9,6 +9,7 @@ import com.ironhack.bankingsystemapp.models.accounts.SavingsAccount;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import com.ironhack.bankingsystemapp.models.users.Address;
 import com.ironhack.bankingsystemapp.repositories.accounts.SavingsAccountRepository;
+import com.ironhack.bankingsystemapp.repositories.accounts.TransactionRepository;
 import com.ironhack.bankingsystemapp.repositories.users.AccountHolderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,8 @@ public class AccountHolderControllerTest {
     AccountHolderRepository accountHolderRepository;
     @Autowired
     SavingsAccountRepository savingsAccountRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -67,6 +70,7 @@ public class AccountHolderControllerTest {
 
         String body = objectMapper.writeValueAsString(accountHolderX);
         MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/create-user")
+                        .with(user("user2test").password("1234").roles("ACCOUNT-HOLDER"))
                 .content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
@@ -116,7 +120,7 @@ public class AccountHolderControllerTest {
 //        assertTrue(mvcResult.getResponse().getContentAsString().contains(BigDecimal.valueOf(1050).toString()));
 //    }
 
-    // TRANSFER MONEY WITH AUTHENTICATION !! ----------- NOT WORKING :/
+    // TRANSFER MONEY WITH AUTHENTICATION !! ----------- TEST NOT WORKING :/ -- BUT IN POSTMAN OK!!!
     @Test
     public void shouldTransferMoneyWithAuth() throws Exception {
         Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
@@ -134,7 +138,7 @@ public class AccountHolderControllerTest {
         String body = objectMapper.writeValueAsString(transactionTest);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-with-auth")
-                        .with(user("user3test").password("1234").roles("ROLE_ACCOUNT-HOLDER"))
+                        .with(user("user3test").password("1234").roles("ACCOUNT-HOLDER"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn();
@@ -168,5 +172,31 @@ public class AccountHolderControllerTest {
 //    }
 
 
+    // -------------- GET LIST OF TRANSACTIONS ------- TEST NOT WORKING :/ ? - BUT IN POSTMAN OK!!
+@Test
+    public void shouldGetListOfTransferences() throws Exception {
+             Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
+        // Sender Account and Accountholder
+        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+        SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),senderAccountHolder,"ABC"));
+
+        // Reveiver Account and Accountholder
+        AccountHolder receiverAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+        SavingsAccount receiverAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),receiverAccountHolder,"ABC"));
+
+        // Transaction from
+        Transaction transaction1 = new Transaction(senderAccount, receiverAccount,receiverAccountHolder.getName(),BigDecimal.valueOf(100));
+        Transaction transaction2 = new Transaction(senderAccount, receiverAccount,receiverAccountHolder.getName(),BigDecimal.valueOf(100));
+        transactionRepository.save(transaction1);
+        transactionRepository.save(transaction2);
+
+
+            MvcResult mvcResult = mockMvc.perform(get("/api/accountholder-area/transaction/all")
+                            .with(user("user3test").password("1234").roles("ACCOUNT-HOLDER")))
+                            .andExpect(status().isOk())
+                            .andReturn();
+
+            assertEquals(2, transactionRepository.findAll().size());
+}
 
 }

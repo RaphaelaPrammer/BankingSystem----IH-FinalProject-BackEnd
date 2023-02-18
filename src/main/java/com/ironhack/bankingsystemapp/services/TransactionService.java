@@ -286,6 +286,29 @@ public class TransactionService {
         return sendingAccount;
     }
 
+    public List getTransactionList(Authentication authentication){
+        AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized "));
+        //AccountHolder user = accountHolderRepository.findByUsername(username).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized "));
+        List<Transaction> receivingTransactions = transactionRepository.findByReceiverAccountId(user.getId());
+        List<Transaction> sendingTransactions = transactionRepository.findBySenderAccountId(user.getId());
+        TransactionDTO receivingTransactionDTO = null;
+        TransactionDTO sendingTransactionDTO = null;
+        List<TransactionDTO> transactionDTOListReceiver= new ArrayList<>();
+        List<TransactionDTO> transactionDTOListSender= new ArrayList<>();
+        for(Transaction receivingTransaction : receivingTransactions){
+            receivingTransactionDTO = new TransactionDTO(receivingTransaction.getSenderAccount().getId(), receivingTransaction.getReceiverAccount().getId(), receivingTransaction.getReceiverName(), receivingTransaction.getTransferAmount());
+            transactionDTOListReceiver.add(receivingTransactionDTO);
+        }
+        for(Transaction sedingTransaction : sendingTransactions){
+           sendingTransactionDTO = new TransactionDTO(sedingTransaction.getSenderAccount().getId(), sedingTransaction.getReceiverAccount().getId(), sedingTransaction.getReceiverName(), sedingTransaction.getTransferAmount());
+            transactionDTOListSender.add(sendingTransactionDTO);
+        }
+        List transactionList= new ArrayList<>();
+        transactionList.add(transactionDTOListReceiver);
+        transactionList.add(transactionDTOListSender);
+        return transactionList;
+
+    }
 //    public List getListOfTransactions(Long userId){
 //            List receivingTransactions = new ArrayList<>(transactionRepository.findByReceiverAccountId(userId)) ;
 //            List sendingTransactions = new ArrayList<>(transactionRepository.findBySenderAccountId(userId));

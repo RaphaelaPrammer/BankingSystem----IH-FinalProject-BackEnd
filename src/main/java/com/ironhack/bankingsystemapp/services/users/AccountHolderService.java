@@ -48,14 +48,12 @@ public class AccountHolderService {
 
     // Get a List of all Accounts of the Owner --- ACCOUNT-HOLDER
     public List<Account> getListOfAccountsByUsername(Authentication authentication){
-        AccountHolder user = accountHolderRepository.findByUsername(authentication.getPrincipal().toString()).get();
+        AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         String username = user.getUsername();
-        // check if there is a user with the given username
-        AccountHolder accountHolder1 = accountHolderRepository.findById(user.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found"));
+
 
         // get the List of the primary Accounts with this id
-     return accountHolder1.getPrimaryAccounts();
+     return user.getPrimaryAccounts();
     }
 
     // Get a List of all Accounts of the Owner --- ADMIN

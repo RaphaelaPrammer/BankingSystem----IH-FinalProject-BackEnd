@@ -73,6 +73,7 @@ public class AdminControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+    Admin admin0;
 
     @BeforeEach
     void setUp(){
@@ -87,7 +88,7 @@ public class AdminControllerTest {
 }
 
     //-----------------------------------------------------
-    // Tests work individually, but not when the class is being executed
+    // Tests work individually, but not when the class is being executed. Also, comment the created Users and accounts within the main, and run the application again, otherwise, the number of users/accounts wont match.
     //-----------------------------------------------------
 
     @Test

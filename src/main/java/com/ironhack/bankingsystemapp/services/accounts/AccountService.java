@@ -165,7 +165,7 @@ public void deleteAccount(Long id){
 
 
     // TEST 2 IS WORKING !!!!!!!!
-    public BigDecimal getBalanceAccountHolderTest2(Long accountId, Authentication authentication){
+    public BigDecimal getBalanceAccountHolderWithAuth(Long accountId, Authentication authentication){
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not Authorized"));
 
         Account account = null;
