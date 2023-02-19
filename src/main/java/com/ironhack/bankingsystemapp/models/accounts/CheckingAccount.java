@@ -69,11 +69,11 @@ public class CheckingAccount extends Account {
         this.lastPenaltyFeeApplied = lastPenaltyFeeApplied;
     }
 
-    //-----------------------
     // PENALTY FEE - check if actual balance is greater than minimum Balance - if not (condition will be -1), the penalty fee will be deducted.
+    // this condition will be applied only after 3 months after the last application of the penalty fee
     public void applyPenaltyFeeChecking(){
         if(super.getBalance().compareTo(MINIMUM_BALANCE)<0){
-            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>3){
+            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>2.999){
                 super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
                 setLastPenaltyFeeApplied(LocalDate.now());
             }
@@ -83,10 +83,10 @@ public class CheckingAccount extends Account {
 
 // MONTHLY MAINTENANCE FEE - check if current Date is 1month + the date of last maintenance fee applied - add the maintenance fee to the balance and reset this date to +1month
     public void applyMaintenanceFeeChecking(){
-
-        if(Period.between(lastMonthlyMaintenanceFeeApplied, LocalDate.now()).getMonths()>1){
+    Period period = Period.between(lastMonthlyMaintenanceFeeApplied, LocalDate.now());
+        if(period.getMonths()>0.999){
             super.setBalance(super.getBalance().subtract(getMONTHLY_MAINTENANCE_FEE()));
-           setLastMonthlyMaintenanceFeeApplied(LocalDate.now());
+           setLastMonthlyMaintenanceFeeApplied(lastMonthlyMaintenanceFeeApplied.plusMonths(period.getMonths()));
         }
     }
 

@@ -22,6 +22,7 @@ import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class AccountService {
 
@@ -142,7 +143,7 @@ public void deleteAccount(Long id){
 //            }
 
         //return accountRepository.findById(accountId).get().getBalance();
-        return new BigDecimal(0);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
     }
 

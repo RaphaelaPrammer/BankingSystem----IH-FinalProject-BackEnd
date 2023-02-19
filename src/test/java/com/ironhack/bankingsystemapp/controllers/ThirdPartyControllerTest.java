@@ -56,6 +56,8 @@ public class ThirdPartyControllerTest {
     void setThirdparty0(){
 
     }
+
+    // ----- SEND MONEY ------ TEST NOT WORKING :/ ? ---- BUT POSTMAN OK.
     @Test
     public void shouldMakeTransferenceSENDMONEY() throws Exception {
         // Create a Thirdparty who wants to do the operation
@@ -86,7 +88,7 @@ public class ThirdPartyControllerTest {
 
 
     }
-
+    // ----- Receive MONEY ------ TEST NOT WORKING :/ ? ---- BUT POSTMAN OK.
     @Test
     public void shouldMakeTransferenceRECEIVEMONEY() throws Exception {
         // Create a Thirdparty who wants to do the operation

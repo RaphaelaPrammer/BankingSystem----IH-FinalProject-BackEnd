@@ -1,6 +1,10 @@
 package com.ironhack.bankingsystemapp.models.accounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.ironhack.bankingsystemapp.models.Transaction;
 import com.ironhack.bankingsystemapp.models.users.AccountHolder;
 import jakarta.annotation.Nullable;

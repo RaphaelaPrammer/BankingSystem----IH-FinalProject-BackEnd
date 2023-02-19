@@ -75,9 +75,9 @@ public class BankingSystemApplication implements CommandLineRunner{
         SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2500), accountHolder1, "ABC"));
         CreditCard creditCard = creditCardRepository.save(new CreditCard(BigDecimal.valueOf(2000), accountHolder1));
 
-        savingsAccount.setCreationDate(LocalDate.of(2020,01,01));
-        savingsAccount.setLastInterestRateApplied(LocalDate.of(2022,02,01));
-        savingsAccountRepository.save(savingsAccount);
+
+
+
 
       //  Transaction transaction = transactionRepository.save(new Transaction(checkingAccount, studentAccount,"User2",BigDecimal.valueOf(100) ));
 

@@ -30,20 +30,20 @@ public class CreditCard extends  Account{
     }
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner) {
          super(balance, primaryOwner);
-        this.lastInterestRateApplied=super.getCreationDate();
+
     }
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
-        this.lastInterestRateApplied=super.getCreationDate();
+
     }
 
     public CreditCard(BigDecimal balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal creditLimit, BigDecimal interestRate) {
         super(balance, primaryOwner, secondaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
-        this.lastInterestRateApplied=super.getCreationDate();
+
     }
 
     public BigDecimal getCreditLimit() {
@@ -93,9 +93,10 @@ public class CreditCard extends  Account{
     }
 
     // PENALTY FEE - check if actual balance is greater than credit Limit , the penalty fee will be deducted.
+    // this condition will be applied only after 3 months after the last application of the penalty fee
     public void applyPenaltyFeeCredit(){
         if(super.getBalance().compareTo(creditLimit)<0){
-            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>3){
+            if(Period.between(lastPenaltyFeeApplied,LocalDate.now()).getMonths()>2.999){
                 super.setBalance(super.getBalance().subtract(getPENALTY_FEE()));
                 setLastPenaltyFeeApplied(LocalDate.now());
             }
@@ -105,10 +106,11 @@ public class CreditCard extends  Account{
     // INTEREST RATE
     public void applyInterestRateCredit(){
         // check if last Time the interest rate has been applied is more than one year, we add the interest rate to the balance.
-        if(Period.between(lastInterestRateApplied,LocalDate.now()).getMonths()>1){
-            super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate)));
-            // reset the lastInterestRateApplied Date
-            setLastInterestRateApplied(LocalDate.now());
+        Period period = Period.between(lastInterestRateApplied,LocalDate.now());
+        if(period.getMonths()>0.999){
+            super.setBalance(super.getBalance().add(super.getBalance().multiply(interestRate.multiply(BigDecimal.valueOf(period.getMonths())))));
+            // reset the lastInterestRateApplied Date, add the months
+            setLastInterestRateApplied(lastInterestRateApplied.plusYears(period.getMonths()));
         }
     }
 

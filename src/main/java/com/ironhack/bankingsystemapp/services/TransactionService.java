@@ -59,10 +59,6 @@ public class TransactionService {
             }
         }
         Account senderAccount = accountRepository.findById(senderAccount1.getId()).get();
-        //----
-        // without userDetails:
-//         Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
-        //------
 
         // check if there are enough funds on the sending account.
         if(senderAccount.getBalance().compareTo(transactionDTO.getAmount())<0){
@@ -88,21 +84,27 @@ public class TransactionService {
         if(senderAccount instanceof SavingsAccount){
             ((SavingsAccount) senderAccount).applyPenaltyFeeSavings();
             ((SavingsAccount) senderAccount).applyInterestRateSavings();
+            accountRepository.save(senderAccount);
+            return senderAccount;
         }
         // check if its CreditCard, and apply interest rate:
         if(senderAccount instanceof CreditCard){
             ((CreditCard) senderAccount).applyPenaltyFeeCredit();
             ((CreditCard) senderAccount).applyInterestRateCredit();
+            accountRepository.save(senderAccount);
+            return senderAccount;
         }
         // check if its Checking Account, and apply maintenance Fee:
         if(senderAccount instanceof CheckingAccount){
             ((CheckingAccount) senderAccount).applyPenaltyFeeChecking();
             ((CheckingAccount) senderAccount).applyMaintenanceFeeChecking();
+            accountRepository.save(senderAccount);
+            return senderAccount;
 
         }
 
         // save the sender Account with new balance
-        accountRepository.save(senderAccount);
+        //accountRepository.save(senderAccount);
 
         // add the money to the receiving account
         receiverAccount.setBalance(receiverAccount.getBalance().add(transactionDTO.getAmount()));
@@ -114,7 +116,8 @@ public class TransactionService {
         Transaction transaction = transactionRepository.save(new Transaction(senderAccount, receiverAccount, transactionDTO.getReceiverName(), transactionDTO.getAmount()));
         transactionRepository.save(transaction);
 
-        return senderAccount;
+        //return senderAccount;
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     //-----------------------------------------------
@@ -288,6 +291,7 @@ public class TransactionService {
 
     public List getTransactionList(Authentication authentication){
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized "));
+        // Without Authentication:
         //AccountHolder user = accountHolderRepository.findByUsername(username).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized "));
         List<Transaction> receivingTransactions = transactionRepository.findByReceiverAccountId(user.getId());
         List<Transaction> sendingTransactions = transactionRepository.findBySenderAccountId(user.getId());
@@ -309,27 +313,5 @@ public class TransactionService {
         return transactionList;
 
     }
-//    public List getListOfTransactions(Long userId){
-//            List receivingTransactions = new ArrayList<>(transactionRepository.findByReceiverAccountId(userId)) ;
-//            List sendingTransactions = new ArrayList<>(transactionRepository.findBySenderAccountId(userId));
-//            return List.of(receivingTransactions,sendingTransactions);
-//    }
-
-//    public List getListOfTransactions(Long userId){
-//        List<Transaction> list1 = transactionRepository.findBySenderAccountIdOrReceiverAccountId(userId);
-//        Long senderAccountId ;
-//         Long receiverAccountId;
-//         String receiverName ;
-//         BigDecimal amount ;
-//        LocalDateTime transactionDate;
-//        for( Transaction t : list1){
-//            receiverName=t.getReceiverName();
-//            amount=t.getTransferAmount();
-//            senderAccountId=t.getSenderAccount().getId();
-//            receiverAccountId=t.getReceiverAccount().getId();
-//            transactionDate=t.getTransactionDate();
-//            //TO BE CONTINUED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        }
-//    }
 
 }
