@@ -53,31 +53,42 @@ public class AdminController {
     // -------------- A C C O U N T S ------------------------------------------
     // ------------------------------------------------------------------------
     //--------- Get Account(s)---------------
+    //--------- Get All Accounts---------------
     @GetMapping("/accounts/all")
     @ResponseStatus(HttpStatus.OK)
     public List<Account> getAccounts() {
         return accountService.findAll();
    }
+
+    //--------- Get All Checking Accounts---------------
     @GetMapping("/accounts/all/checking")
     @ResponseStatus(HttpStatus.OK)
     public List<CheckingAccount> getAllCheckings() {
         return checkingAccountService.getCheckingAccounts();
     }
+
+    //--------- Get All Credit Cards---------------
     @GetMapping("/accounts/all/creditcards")
     @ResponseStatus(HttpStatus.OK)
     public List<CreditCard> getAllCreditCards() {
         return creditCardService.getAllCreditCards();
     }
+
+    //--------- Get All Savings Accounts---------------
     @GetMapping("/accounts/all/savingsaccounts")
     @ResponseStatus(HttpStatus.OK)
     public List<SavingsAccount> getAllSavingAccounts() {
         return savingsAccountService.getAllSavingsAccounts();
     }
+
+    //--------- Get All Student Accounts---------------
     @GetMapping("/accounts/all/studentaccounts")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentAccount> getAllStudentAccounts() {
         return studentAccountService.getAllStudentAccounts();
     }
+
+    //--------- Get Account by AccountID---------------
     @GetMapping("/accounts/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Account getAccountById(@PathVariable Long id) {
@@ -85,55 +96,64 @@ public class AdminController {
     }
 
 
-    // --------- Get List of Accounts -----------
+    // --------- Get List of Accounts of User by Username -----------
     @GetMapping("/accounts/user")
     @ResponseStatus(HttpStatus.OK)
     public List<Account> getListAccounts(@RequestParam String username){
         return accountHolderService.getListOfAccountsByUsernameAdmin(username);
     }
-
-    //--------- Delete Account ---------------
+    //---------------------------------------------------
+    //--------- Delete Account by AccountID---------------
     @DeleteMapping("/accounts")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void deleteAccount(@RequestParam Long id){
         accountService.deleteAccount(id);
     }
 
-    //--------- Get Balance of Account ---------------
+    //---------------------------------------------------
+    //--------- Get Balance of Account by AccountId---------------
      @GetMapping("/accounts/balance")
      @ResponseStatus(HttpStatus.OK)
      public BigDecimal getBalance(@RequestParam Long id){
          return accountService.requestBalance(id);
     }
-    //--------- Modify Balance---------------
+
+    //--------- Modify Balance ADD - of Account by AccountId----------------
     @PatchMapping("/accounts/update-balance-add")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal updateBalanceAdd(@RequestParam Long id, @RequestParam BigDecimal amount){
         return accountService.modifyBalanceAdd(id, amount);
     }
+
+    //--------- Modify Balance SUBTRACT - of Account by AccountId----------------
     @PatchMapping("/accounts/update-balance-subtract")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal updateBalanceSubtract(@RequestParam Long id, @RequestParam BigDecimal amount){
         return accountService.modifyBalanceSubtract(id, amount);
     }
-
-    //--------- create New Accounts---------------
+    //---------- ADD NEW ACCOUNT---------------------------
+    //--------- create New Checking Account ---------------
     @PostMapping("/accounts/new/checking")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createCheckingAccount(@RequestBody StudentAccCheckingAccDTO studentAccCheckingAccDTO){
         return checkingAccountService.createCheckingAccount(studentAccCheckingAccDTO);
     }
+
+    //--------- create New Credit Card Account ---------------
     @PostMapping("/accounts/new/credit")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createCreditCard(@RequestBody CreditCard creditCard){
         return creditCardService.createCreditCard(creditCard);
     }
+
+    //--------- create New Savings Account ---------------
     @PostMapping("/accounts/new/savings")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createSavingsAccount(@RequestBody SavingsAccount savingsAccount){
         return savingsAccountService.createSavingsAccount(savingsAccount);
     }
 
+    //--------- create New Student Account ---------------
     @PostMapping("/accounts/new/student")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createStudentAccount(@RequestBody StudentAccCheckingAccDTO studentAccCheckingAccDTO){
@@ -147,23 +167,28 @@ public class AdminController {
     // -------------- U S E R S  ----------------------------------------------
     // ------------------------------------------------------------------------
 
-    // --------- create Users ------------
+    // -------------- ADD USERS --------------------
+    //--------- create New Admin User ---------------
     @PostMapping("/users/new/admin")
     @ResponseStatus(HttpStatus.CREATED)
     public Admin createAdmin(@RequestBody Admin admin){
         return adminService.addAdmin(admin);
     }
+
+    //--------- create New Account Holder User ---------------
     @PostMapping("/users/new/accountholder")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountHolder createAccountHolder(@RequestBody AccountHolder accountHolder){
         return accountHolderService.addAccountHolder(accountHolder);
     }
+
+    //--------- create New Third Party User ---------------
     @PostMapping("/users/new/thirdparty")
     @ResponseStatus(HttpStatus.CREATED)
     public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty){
         return thirdPartyService.addThirdParty(thirdParty);
     }
-
+    //--------- --------- ---------------
     // --------- delete Users ------------
     @DeleteMapping("/users/delete")
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -171,12 +196,15 @@ public class AdminController {
         userService.deleteUser(id);
     }
 
-    // --------- get Users ------------
+    // --------- get Users + Info ---------------
+    // --------- get All Users + Info ------------
     @GetMapping("/users/all")
     @ResponseStatus(HttpStatus.OK)
     public List<User> getUsers(){
         return userService.getUsers();
     }
+
+    // --------- get User Info by Username ------------
     @GetMapping("/users/{username}")
     @ResponseStatus(HttpStatus.OK)
     public User getUser(@PathVariable String username){
@@ -208,7 +236,7 @@ public class AdminController {
        return userService.saveRole(role);
     }
 
-    // ---------- get Roles -----------
+    // ---------- get all Roles -----------
     @GetMapping("/roles/all")
     @ResponseStatus(HttpStatus.OK)
     public List<Role> getAllRoles(){

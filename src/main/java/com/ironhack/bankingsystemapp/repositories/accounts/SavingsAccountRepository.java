@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, Long> {
 
-    Optional<SavingsAccount> findByPrimaryOwnerId(Long id);
+    //Optional<SavingsAccount> findByPrimaryOwnerId(Long id);
 }

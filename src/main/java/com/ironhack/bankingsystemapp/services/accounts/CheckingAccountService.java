@@ -32,15 +32,6 @@ public class CheckingAccountService {
     AccountHolderRepository accountHolderRepository;
 
 
-// Create a new CheckingAccount  OR StudentAccount if age is below 24:
-//    public Account createCheckingAccount (CheckingAccount checkingAccount){
-//        // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.
-//        if(Period.between(checkingAccount.getPrimaryOwner().getDateOfBirth(), LocalDate.now()).getYears() <24){
-//            StudentAccount studentAccount = new StudentAccount(checkingAccount.getBalance(),checkingAccount.getPrimaryOwner(),checkingAccount.getSecretKey());
-//            return studentAccountRepository.save(studentAccount);
-//        } return checkingAccountRepository.save(checkingAccount);
-//    }
-
 // Create a new CheckingAccount  OR StudentAccount if age is below 24 WITH DTO:
     public Account createCheckingAccount (StudentAccCheckingAccDTO studentAccCheckingAccDTO){
         // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.

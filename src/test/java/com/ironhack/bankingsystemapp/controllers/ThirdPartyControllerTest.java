@@ -54,9 +54,6 @@ public class ThirdPartyControllerTest {
                 .apply(springSecurity())
                 .build();;
     }
-    void setThirdparty0(){
-
-    }
 
     // ----- SEND MONEY ------
     @Test

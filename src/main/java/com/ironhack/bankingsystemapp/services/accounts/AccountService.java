@@ -37,64 +37,33 @@ public class AccountService {
     @Autowired
     CheckingAccountRepository checkingAccountRepository;
 
-
+// --------- get a List of all Accounts ---------
 public List<Account> findAll(){
     return accountRepository.findAll();
 }
 
+// --------- get Account by AccountId--------------
 public Account findById(Long id){
     return accountRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This account does not exist"));
 }
 
+// ------- get Account by Username ----------
 public Account findByName(String username){
     return accountRepository.findByPrimaryOwnerUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no account for this Name"));
 }
 
-// deleteAccount(id) --> ADMIN RIGHT
+// ---------- delete Account by Account Id ----------
 public void deleteAccount(Long id){
     accountRepository.deleteById(id);
 }
 
-//------------------------------------------------------------------------
-// INTEREST RATE
-//public void applyInterestRateSavings(Long accountId){
-//    SavingsAccount savAcc = savingsAccountRepository.findById(accountId).get();
-//    // check if last Time the interest rate has been applied is more than one year, we add the interest rate to the balance.
-//    if(Period.between(savAcc.getLastInterestRateApplied(), LocalDate.now()).getYears()>1){
-//        savAcc.setBalance(savAcc.getBalance().add(savAcc.getBalance().multiply(savAcc.getInterestRate())));
-//        // reset the lastInterestRateApplied Date
-//        savAcc.setLastInterestRateApplied(savAcc.getLastInterestRateApplied().plusYears(1));
-//        savingsAccountRepository.save(savAcc);
-//    }
-//}
-//    public void applyInterestRateCredit(Long accountId){
-//    CreditCard cC = creditCardRepository.findById(accountId).get();
-//        // check if last Time the interest rate has been applied is more than one year, we add the interest rate to the balance.
-//        if(Period.between(cC.getLastInterestRateApplied(),LocalDate.now()).getMonths()>1){
-//           cC.setBalance(cC.getBalance().add(cC.getBalance().multiply(cC.getInterestRate())));
-//            // reset the lastInterestRateApplied Date
-//            cC.setLastInterestRateApplied(cC.getLastInterestRateApplied().plusMonths(1));
-//            creditCardRepository.save(cC);
-//        }
-//    }
-//------------------------------------------------------------------------
-// MONTHLY  MAINTENANCE FEE
 
-//    public void applyMaintenanceFee(Long accountId){
-//    CheckingAccount checkAcc = checkingAccountRepository.findById(accountId).get();
-//    if(Period.between(checkAcc.getLastMonthlyMaintenanceFeeApplied(), LocalDate.now()).getMonths()>1){
-//        checkAcc.setBalance(checkAcc.getBalance().subtract(checkAcc.getMONTHLY_MAINTENANCE_FEE()));
-//        checkAcc.setLastMonthlyMaintenanceFeeApplied(checkAcc.getLastMonthlyMaintenanceFeeApplied().plusMonths(1));
-//        checkingAccountRepository.save(checkAcc);
-//    }
-//    }
+//----------Get Balance Information -------------------------------------------
 
-//-----------------------------------------------------
-// get Balance
-
-    // as Admin
+// ------- as Admin, get Balance by Account Id ----------
     public BigDecimal requestBalance(Long accountId){
-        Account account = accountRepository.findById(accountId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
+    // retrieve the account from the DB.
+    Account account = accountRepository.findById(accountId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
 
         //check if its Savings Account, and apply interest rate:
         if(account instanceof SavingsAccount){
@@ -124,37 +93,18 @@ public void deleteAccount(Long id){
         }
         if(account instanceof StudentAccount){
             StudentAccount studentAccount = (StudentAccount) account;
-//            studentAccount.applyMaintenanceFeeChecking();
-//            studentAccount.applyPenaltyFeeChecking();
+            // no Penalty Fee or Maintenance Fee for Student Accounts
+                //studentAccount.applyMaintenanceFeeChecking();
+                //studentAccount.applyPenaltyFeeChecking();
             accountRepository.save(studentAccount);
             return accountRepository.findById(studentAccount.getId()).get().getBalance();
         }
 
         //return accountRepository.findById(accountId).get().getBalance();
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
     }
 
-    // as AccountHolder
-    // WITHOUT AUTHENTICATION
-    public BigDecimal getBalanceAccountHolder(Long accountId, Long ownerId) {
-        // check if Account and Owner exist
-        Account account = accountRepository.findById(accountId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This Account does not exist"));
-        AccountHolder owner = accountHolderRepository.findById(ownerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no Account with this Account Holder Id"));
-
-        // check if the owner ID corresponds to the accountId
-        if (account.getPrimaryOwner().getId() == ownerId || account.getSecondaryOwner().getId() == ownerId) {
-
-            return requestBalance(accountId);
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "You don't have access to this account");
-        }
-    }
-
-
-    // as AccountHolder
-    // WITH AUTHENTICATION
+    // -------- as AccountHolder, WITH AUTHENTICATION -----------------
     public BigDecimal getBalanceAccountHolderWithAuth(Long accountId, Authentication authentication){
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not Authorized"));
 
@@ -162,12 +112,14 @@ public void deleteAccount(Long id){
         //check if the given accountId matches one of the accountsIds for which the sender is Primary Owner or Secondary Owner of.
         for(Account a : user.getPrimaryAccounts()){
             if(a.getId().equals(accountId)) {
+                // call the function for retrieving the balance to check for penalty fee and interest rate.
                 return requestBalance(accountId);
                 //return accountRepository.findById(a.getId()).get().getBalance();
             }
         }
         for(Account a : user.getSecondaryAccounts()){
             if(a.getId().equals(accountId)) {
+                // call the function for retrieving the balance to check for penalty fee, interest rate.
                return requestBalance(accountId);
                 //return accountRepository.findById(a.getId()).get().getBalance();
             }
@@ -176,9 +128,7 @@ public void deleteAccount(Long id){
     }
 
 
-
-
-// modifyBalanceAdd -- ADMIN
+// ----------------  modifyBalance - Add Money to the account -- ADMIN -------------------
 public BigDecimal modifyBalanceAdd(Long id, BigDecimal amount){
     Account account = accountRepository.findById(id).get();
     account.setBalance(account.getBalance().add(amount));
@@ -186,23 +136,12 @@ public BigDecimal modifyBalanceAdd(Long id, BigDecimal amount){
     return account.getBalance();
 }
 
-// modifyBalanceSubtract -- ADMIN
+// --------------- modifyBalance Subtract money from the account  -- ADMIN
 public BigDecimal modifyBalanceSubtract(Long id, BigDecimal amount){
     Account account = accountRepository.findById(id).get();
     account.setBalance(account.getBalance().subtract(amount));
     accountRepository.save(account);
     return account.getBalance();
 }
-
-
-
-
-
-
-
-
-
-
-
 
 }

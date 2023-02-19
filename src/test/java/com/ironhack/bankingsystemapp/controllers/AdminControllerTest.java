@@ -43,7 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 //-----------------------------------------------------
-// Tests work individually, but not when the class is being executed
+// Tests work individually, but not when the class is being executed.
+// For Assertations of number of Accounts/Users - take into account that for each Type there already exist one entry in the DB, which was created in the Main application.
+// Users:5, Accounts:4
 //-----------------------------------------------------
 @SpringBootTest
 public class AdminControllerTest {
@@ -88,7 +90,9 @@ public class AdminControllerTest {
 }
 
     //-----------------------------------------------------
-    // Tests work individually, but not when the class is being executed. Also, comment the created Users and accounts within the main, and run the application again, otherwise, the number of users/accounts wont match.
+    // Tests work individually, but not when the class is being executed.
+    // For Assertations of number of Accounts/Users - take into account that for each Type there already exist one entry in the DB, which was created in the Main application.
+// Users:5, Accounts:4
     //-----------------------------------------------------
 
     @Test
@@ -160,6 +164,7 @@ public class AdminControllerTest {
     }
     @Test
     public void shouldGetAllUsers() throws Exception {
+
         Admin admin = adminRepository.save(new Admin("Admin2Test", "admin2test", "1234") ) ;
         Admin admin1 = adminRepository.save(new Admin("Admin2Test", "admin2test", "1234") ) ;
 
@@ -168,7 +173,7 @@ public class AdminControllerTest {
                         .andExpect(status().isOk())
                         .andReturn();
         System.out.println(userRepository.findAll().size());
-        assertEquals(2, userRepository.findAll().size());
+        assertEquals(6, userRepository.findAll().size());
     }
     @Test
     public void shouldCreateCheckingAccount() throws Exception {
@@ -186,7 +191,7 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1000"));
-        assertEquals(1,checkingAccountRepository.findAll().size());
+        assertEquals(2,checkingAccountRepository.findAll().size());
 
     }
     @Test
@@ -205,8 +210,8 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1000"));
-        assertEquals(0,checkingAccountRepository.findAll().size());
-        assertEquals(1,studentAccountRepository.findAll().size());
+        assertEquals(1,checkingAccountRepository.findAll().size());
+        assertEquals(2,studentAccountRepository.findAll().size());
 
     }
 
@@ -226,7 +231,7 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1000"));
-        assertEquals(1,studentAccountRepository.findAll().size());
+        assertEquals(2,studentAccountRepository.findAll().size());
     }
 
     @Test
@@ -243,7 +248,7 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1050"));
-        assertEquals(1,creditCardRepository.findAll().size());
+        assertEquals(2,creditCardRepository.findAll().size());
 
     }
     @Test
@@ -260,18 +265,15 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1050"));
-        assertEquals(1,savingsAccountRepository.findAll().size());
+        assertEquals(2,savingsAccountRepository.findAll().size());
 
     }
    @Test
     public void shouldDeleteAccount() throws Exception {
-        //reset savingsaccountrepository
-       savingsAccountRepository.deleteAll();
-
        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
        AccountHolder savingsAccountHolder = accountHolderRepository.save(new AccountHolder("SavingsAccountHolder", "savingsaccountholder", "1234", LocalDate.of(1980, 01, 01), address)) ;
        SavingsAccount savingsAccount1 = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),savingsAccountHolder,"ABC"));
-       SavingsAccount savingsAccount2 = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),savingsAccountHolder,"ABC"));
+
 
        String body = objectMapper.writeValueAsString(savingsAccount1);
 

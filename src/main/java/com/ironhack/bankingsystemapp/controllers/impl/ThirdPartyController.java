@@ -18,13 +18,14 @@ public class ThirdPartyController {
 @Autowired
     TransactionService transactionService;
 
-
+    //------ Third Party Transactions -----------------
+    // -------- Send Money away from an Account -------
 @PostMapping("/transaction/send-money")
     @ResponseStatus(HttpStatus.OK)
     public Account thirdPartyTransactionSendMoney(@RequestHeader String hashedKey, @RequestBody ThirdPartyTransactionDTO thirdPartyTransactionDTO){
     return transactionService.thirdPartyTransactionSendMoney(hashedKey,thirdPartyTransactionDTO);
 }
-
+    // -------- Receive Money to an Account ------------
 @PostMapping("/transaction/receive-money")
     @ResponseStatus(HttpStatus.OK)
     public Account thirdPartyTransactionReceiveMoney (@RequestHeader String hashedKey, @RequestBody ThirdPartyTransactionDTO thirdPartyTransactionDTO){

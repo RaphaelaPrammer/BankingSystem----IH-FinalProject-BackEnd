@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 public class StudentAccCheckingAccDTO {
 
+        // DTO for the creation of either Student Account or Checking account, depending on the Age of the User.
     @NotNull
     @Min(0)
     private BigDecimal balance;

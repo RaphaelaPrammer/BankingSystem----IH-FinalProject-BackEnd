@@ -30,20 +30,8 @@ public class StudentAccountService {
     @Autowired
     AccountHolderRepository accountHolderRepository;
 
-    // Create a new StudentAccount if age is below 24, otherwise checking account:
-//    public Account createStudentAccount (StudentAccount studentAccount){
-//        // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.
-//        if(Period.between(studentAccount.getPrimaryOwner().getDateOfBirth(), LocalDate.now()).getYears() <24){
-//           return studentAccountRepository.save(studentAccount);
-//        } else{
-//            CheckingAccount checkingAccount = new CheckingAccount(studentAccount.getBalance(), studentAccount.getPrimaryOwner(), studentAccount.getSecretKey());
-//            return checkingAccountRepository.save(checkingAccount);
-//        }
-//    }
-
 
     // Create a new StudentAccount if age is below 24, otherwise checking account:
-    // WITH DTO TEST
         public Account createStudentAccount (StudentAccCheckingAccDTO studentAccCheckingAccDTO){
         // compares DOB of Primary Owner with Age 24 to determine if a Checking Account or Student Account is created --> <24y create student account.
             AccountHolder owner = accountHolderRepository.findById(studentAccCheckingAccDTO.getPrimaryOwnerId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));

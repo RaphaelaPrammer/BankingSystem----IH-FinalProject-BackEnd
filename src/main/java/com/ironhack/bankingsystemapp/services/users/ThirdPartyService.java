@@ -34,8 +34,4 @@ public class ThirdPartyService {
         return newThirdParty;
     }
 
-    // delete the Third Party from the Repository
-    public void removeThirdParty(Long id){
-        thirdPartyRepository.deleteById(id);
-    }
 }

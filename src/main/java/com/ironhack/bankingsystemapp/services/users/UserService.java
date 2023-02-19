@@ -54,29 +54,18 @@ public class UserService implements  UserDetailsService {
         }
     }
 
-    /**
-     * Saves a new user to the database
-      */
-//    public User saveUser(User user) {
-//        log.info("Saving new user {} to the database", user.getName());
-//        // Encode the user's password for security before saving
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userRepository.save(user);
-//    }
+    // ---- create new Users ---
+    // --> functionality within AccountHolderService, AdminService, ThirdPartyService
+    // because there was a circular dependency with the passwordEncoder.
 
-    /**
-     * Saves a new role to the database
-     */
+    // -------- Add a new Role -------
     public Role saveRole(Role role) {
         log.info("Saving new role {} to the database", role.getRole());
         return roleRepository.save(role);
 
     }
 
-    /**
-     * Adds a role to the user with the given username
-     */
-
+    // --------- Add Role to User by Username ---------
     public void addRoleToUser(String username, String roleName) {
         log.info("Adding role {} to user {}", roleName, username);
 
@@ -91,14 +80,11 @@ public class UserService implements  UserDetailsService {
         userRepository.save(user);
     }
 
-    /**
-     * Retrieves the user with the given username
-     */
+   // ------- get User-Info by Username ------
     public User getUser(String username) {
         log.info("Fetching user {}", username);
         return userRepository.findByUsername(username);
     }
-
 
     // get a List of all Users
     public List<User> getUsers() {
@@ -106,13 +92,9 @@ public class UserService implements  UserDetailsService {
         return userRepository.findAll();
     }
 
-
-
-
     // delete User
     public void deleteUser(Long id){
         userRepository.deleteById(id);
     }
-
 
 }
