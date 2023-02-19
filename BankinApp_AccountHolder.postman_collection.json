@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "e85dd994-16bf-41b6-8568-45d7d1ca28db",
+		"name": "BankinApp_AccountHolder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25582229"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/login?username=user1&password=1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "user1"
+						},
+						{
+							"key": "password",
+							"value": "1234"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBalanceAccountIdWithAUTH",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/accounts/my-balance-with-auth?accountId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"accounts",
+						"my-balance-with-auth"
+					],
+					"query": [
+						{
+							"key": "accountId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getListOfAccountsFromUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/my-accounts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"my-accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addMailingAddress",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"addressName\": \"mailaddress 1\",\r\n            \"city\": \"Madrid\",\r\n            \"postalCode\": \"00000\",\r\n            \"country\": \"Spain\"\r\n       \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/add-mailing-address?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"add-mailing-address"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateAddress",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"addressName\": \"newAddress\",\r\n                \"city\": \"newCity\",\r\n                \"postalCode\": \"\",\r\n                \"country\": \"\"\r\n\r\n       \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/update-address?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"update-address"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAccountHolder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"name\": \"Maria Lopez\",\r\n        \"username\": \"lopezmaria\",\r\n        \"password\": \"1234\",\r\n        \"dateOfBirth\": \"2001-01-01\",\r\n        \"primaryAddress\": {\r\n            \"addressName\": \"Calle 1\",\r\n            \"city\": \"Barcelona\",\r\n            \"postalCode\": \"08020\",\r\n            \"country\": \"Spain\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/create-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"create-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transferMoney",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"senderAccountId\": 1,\r\n\"receiverAccountId\": 3,\r\n\"receiverName\": \"User1\",\r\n\"amount\": 500\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/transaction-with-auth",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"transaction-with-auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getListOfTransactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/accountholder-area/transaction/all?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"accountholder-area",
+						"transaction",
+						"all"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGVzIjpbIlJPTEVfQUNDT1VOVC1IT0xERVIiXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL2FwaS9sb2dpbiIsImV4cCI6MTY3NjgwMTMzOH0.3f40sgs3oHFizR_yua7x_J9OLPgr7DwBQC_ByXFKvRo",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

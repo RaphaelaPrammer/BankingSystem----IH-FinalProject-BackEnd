@@ -154,7 +154,8 @@ public class AdminControllerTest {
                         .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         System.out.println(adminRepository.findAll().size());
-        assertEquals(0, adminRepository.findAll().size());
+        // 1 Admin in DB, bc of the admin who is performing the operation
+        assertEquals(1, adminRepository.findAll().size());
 
     }
     @Test
