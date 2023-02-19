@@ -37,7 +37,4 @@ UserService userService;
         return newAdmin;
     }
 
-    public void deleteAdmin(Long id){
-        adminRepository.deleteById(id);
-    }
 }

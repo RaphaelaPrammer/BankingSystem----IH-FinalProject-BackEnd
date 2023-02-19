@@ -67,10 +67,11 @@ public class UserService implements  UserDetailsService {
     /**
      * Saves a new role to the database
      */
-//    public Role saveRole(Role role) {
-//        log.info("Saving new role {} to the database", role.getRole());
-//        return roleRepository.save(role);
-//    }
+    public Role saveRole(Role role) {
+        log.info("Saving new role {} to the database", role.getRole());
+        return roleRepository.save(role);
+
+    }
 
     /**
      * Adds a role to the user with the given username

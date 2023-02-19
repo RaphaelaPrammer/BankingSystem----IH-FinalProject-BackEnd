@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,14 +51,14 @@ public class ThirdPartyControllerTest {
     @BeforeEach
     void setUp(){
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                //.apply(springSecurity())
+                .apply(springSecurity())
                 .build();;
     }
     void setThirdparty0(){
 
     }
 
-    // ----- SEND MONEY ------ TEST NOT WORKING :/ ? ---- BUT POSTMAN OK.
+    // ----- SEND MONEY ------
     @Test
     public void shouldMakeTransferenceSENDMONEY() throws Exception {
         // Create a Thirdparty who wants to do the operation
@@ -76,19 +77,15 @@ public class ThirdPartyControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/third-party-area/transaction/send-money")
                     .with(user("thirdparty0").password("0000").roles("THIRD-PARTY"))
-                        .param("hashedKey", "WAUWAU")
+                        .header("hashedKey", "WAUWAU")
                     .content(body).contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
-
-        assertEquals("4000.00",savingsAccount.getBalance().toString());
-
-
-
-
-
+       assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":4000.00"));
     }
-    // ----- Receive MONEY ------ TEST NOT WORKING :/ ? ---- BUT POSTMAN OK.
+
+
+    // ----- Receive MONEY ------
     @Test
     public void shouldMakeTransferenceRECEIVEMONEY() throws Exception {
         // Create a Thirdparty who wants to do the operation
@@ -107,12 +104,11 @@ public class ThirdPartyControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/third-party-area/transaction/receive-money")
                         .with(user("thirdparty0").password("0000").roles("THIRD-PARTY"))
-                        .param("hashedKey", "WAUWAU")
+                        .header("hashedKey", "WAUWAU")
                         .content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-
-        assertEquals("6000.00",savingsAccount.getBalance().toString());
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":6000.00"));
 
     }
 }

@@ -41,25 +41,17 @@ public class AccountHolderService {
         return newAccountHolder;
     }
 
-    // Delete Account Holder User
-    public void deleteAccountHolder(Long ownerId){
-        accountHolderRepository.deleteById(ownerId);
-    }
-
     // Get a List of all Accounts of the Owner --- ACCOUNT-HOLDER
     public List<Account> getListOfAccountsByUsername(Authentication authentication){
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        String username = user.getUsername();
-
-
-        // get the List of the primary Accounts with this id
+              // get the List of the primary Accounts with this id
      return user.getPrimaryAccounts();
     }
 
     // Get a List of all Accounts of the Owner --- ADMIN
-    public List<Account> getListOfAccountsById(Long userId){
+    public List<Account> getListOfAccountsByUsernameAdmin(String username){
         // check if there is a user with the given id
-        AccountHolder accountHolder1 = accountHolderRepository.findById(userId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found"));
+        AccountHolder accountHolder1 = accountHolderRepository.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder not found"));
 
         // get the List of the primary Accounts with this id
         return accountHolder1.getPrimaryAccounts();

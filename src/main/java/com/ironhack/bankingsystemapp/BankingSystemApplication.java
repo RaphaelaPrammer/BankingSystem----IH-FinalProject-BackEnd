@@ -91,9 +91,7 @@ public class BankingSystemApplication implements CommandLineRunner{
         userService.addRoleToUser("user1", "ACCOUNT-HOLDER");
         userService.addRoleToUser("user2", "ACCOUNT-HOLDER");
         userService.addRoleToUser("thirdparty1", "THIRD-PARTY");
-//
-//
-//        System.out.println(userRepository.findByUsername("admin1").getRoles().toString());
+
 
 
 

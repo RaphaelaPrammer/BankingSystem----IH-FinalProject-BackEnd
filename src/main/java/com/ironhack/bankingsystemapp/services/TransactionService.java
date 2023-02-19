@@ -100,7 +100,11 @@ public class TransactionService {
             ((CheckingAccount) senderAccount).applyMaintenanceFeeChecking();
             accountRepository.save(senderAccount);
             return senderAccount;
-
+        }
+        // check if its Student Account:
+        if(senderAccount instanceof StudentAccount){
+            accountRepository.save(senderAccount);
+            return senderAccount;
         }
 
         // save the sender Account with new balance
@@ -123,67 +127,78 @@ public class TransactionService {
     //-----------------------------------------------
     //-----------------------------------------------
     //---------------- Transaction Accountholder without Auth
-    public Account makeTransactionWithoutAUTH(TransactionDTO transactionDTO){
-        // get the receiving account from the DTO.
-        Account receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
-
-        //----
-        // without userDetails:
-        Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
-        //------
-
-        // check if there are enough funds on the sending account.
-        if(senderAccount.getBalance().compareTo(transactionDTO.getAmount())<0){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough funds on this account.");
-        }
-        // Check if Name of Receiver matches the Receiving account name.
-        if(!receiverAccount.getPrimaryOwner().getName().equals(transactionDTO.getReceiverName())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The name of the receiver doesn't match with the receiving account");
-        }
-
-        // subtract the transfer amount from the sending account
-        // check if sufficient funds are provided on the sending account
-        if(senderAccount.getBalance().compareTo(transactionDTO.getAmount())<0){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not enough funds to to this operation");
-        } else{
-            // deduct the money to the sending account
-            senderAccount.setBalance(senderAccount.getBalance().subtract(transactionDTO.getAmount()));;
-        }
-
-
-        // Check for Penalty Fee and Interest Rate and Maintenance Fee
-        //check Type of account
-        if(senderAccount instanceof SavingsAccount){
-            ((SavingsAccount) senderAccount).applyPenaltyFeeSavings();
-            ((SavingsAccount) senderAccount).applyInterestRateSavings();
-        }
-        // check if its CreditCard, and apply interest rate:
-        if(senderAccount instanceof CreditCard){
-            ((CreditCard) senderAccount).applyPenaltyFeeCredit();
-            ((CreditCard) senderAccount).applyInterestRateCredit();
-        }
-        // check if its Checking Account, and apply maintenance Fee:
-        if(senderAccount instanceof CheckingAccount){
-            ((CheckingAccount) senderAccount).applyPenaltyFeeChecking();
-            ((CheckingAccount) senderAccount).applyMaintenanceFeeChecking();
-
-        }
-
-        // save the sender Account with new balance
-        accountRepository.save(senderAccount);
-
-        // add the money to the receiving account
-        receiverAccount.setBalance(receiverAccount.getBalance().add(transactionDTO.getAmount()));
-
-        // save receiving account with new balance
-        accountRepository.save(receiverAccount);
-
-        // save the transaction in the Database
-        Transaction transaction = transactionRepository.save(new Transaction(senderAccount, receiverAccount, transactionDTO.getReceiverName(), transactionDTO.getAmount()));
-        transactionRepository.save(transaction);
-
-        return senderAccount;
-    }
+//    public Account makeTransactionWithoutAUTH(TransactionDTO transactionDTO){
+//        // get the receiving account from the DTO.
+//        Account receiverAccount = accountRepository.findById(transactionDTO.getReceiverAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
+//
+//        //----
+//        // without userDetails:
+//        Account senderAccount = accountRepository.findById(transactionDTO.getSenderAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"No Account with this id"));
+//        //------
+//
+//        // check if there are enough funds on the sending account.
+//        if(senderAccount.getBalance().compareTo(transactionDTO.getAmount())<0){
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough funds on this account.");
+//        }
+//        // Check if Name of Receiver matches the Receiving account name.
+//        if(!receiverAccount.getPrimaryOwner().getName().equals(transactionDTO.getReceiverName())){
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The name of the receiver doesn't match with the receiving account");
+//        }
+//
+//        // subtract the transfer amount from the sending account
+//        // check if sufficient funds are provided on the sending account
+//        if(senderAccount.getBalance().compareTo(transactionDTO.getAmount())<0){
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not enough funds to to this operation");
+//        } else{
+//            // deduct the money to the sending account
+//            senderAccount.setBalance(senderAccount.getBalance().subtract(transactionDTO.getAmount()));;
+//        }
+//
+//
+//        // Check for Penalty Fee and Interest Rate and Maintenance Fee
+//        //check Type of account
+//        if(senderAccount instanceof SavingsAccount){
+//            ((SavingsAccount) senderAccount).applyPenaltyFeeSavings();
+//            ((SavingsAccount) senderAccount).applyInterestRateSavings();
+//            accountRepository.save(senderAccount);
+//            return senderAccount;
+//        }
+//        // check if its CreditCard, and apply interest rate:
+//        if(senderAccount instanceof CreditCard){
+//            ((CreditCard) senderAccount).applyPenaltyFeeCredit();
+//            ((CreditCard) senderAccount).applyInterestRateCredit();
+//            accountRepository.save(senderAccount);
+//            return senderAccount;
+//        }
+//        // check if its Checking Account, and apply maintenance Fee:
+//        if(senderAccount instanceof CheckingAccount){
+//            ((CheckingAccount) senderAccount).applyPenaltyFeeChecking();
+//            ((CheckingAccount) senderAccount).applyMaintenanceFeeChecking();
+//            accountRepository.save(senderAccount);
+//            return senderAccount;
+//
+//        }
+//    // check if its Student Account:
+//        if(senderAccount instanceof StudentAccount){
+//        accountRepository.save(senderAccount);
+//        return senderAccount;
+//    }
+//
+//        // save the sender Account with new balance
+//        //accountRepository.save(senderAccount);
+//
+//        // add the money to the receiving account
+//        receiverAccount.setBalance(receiverAccount.getBalance().add(transactionDTO.getAmount()));
+//
+//        // save receiving account with new balance
+//        accountRepository.save(receiverAccount);
+//
+//        // save the transaction in the Database
+//        Transaction transaction = transactionRepository.save(new Transaction(senderAccount, receiverAccount, transactionDTO.getReceiverName(), transactionDTO.getAmount()));
+//        transactionRepository.save(transaction);
+//
+//         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+//    }
 
     public Account thirdPartyTransactionReceiveMoney(String hashedKey, ThirdPartyTransactionDTO thirdPartyTransactionDTO){
         Account receiverAccount = accountRepository.findById(thirdPartyTransactionDTO.getAccountId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"This account does not exist"));
@@ -218,13 +233,35 @@ public class TransactionService {
 
         // add the money to the receiving account
         receiverAccount.setBalance(receiverAccount.getBalance().add(thirdPartyTransactionDTO.getAmount()));
+
+        // Check for Penalty Fee and Interest Rate and Maintenance Fee
+        //check Type of account
+        if(receiverAccount instanceof SavingsAccount){
+            ((SavingsAccount) receiverAccount).applyPenaltyFeeSavings();
+            ((SavingsAccount) receiverAccount).applyInterestRateSavings();
+            accountRepository.save(receiverAccount);
+            return receiverAccount;
+        }
+        // check if its Checking Account, and apply maintenance Fee:
+        if(receiverAccount instanceof CheckingAccount){
+            ((CheckingAccount) receiverAccount).applyPenaltyFeeChecking();
+            ((CheckingAccount) receiverAccount).applyMaintenanceFeeChecking();
+            accountRepository.save(receiverAccount);
+            return receiverAccount;
+        }
+        // check if its Student Account:
+        if(receiverAccount instanceof StudentAccount){
+            accountRepository.save(receiverAccount);
+            return receiverAccount;
+        }
+
         // save the receiving account to the DB
-        accountRepository.save(receiverAccount);
+        //accountRepository.save(receiverAccount);
 
         // save the transaction
         Transaction transaction = transactionRepository.save(new Transaction(null, receiverAccount, receiverAccount.getPrimaryOwner().getName(),thirdPartyTransactionDTO.getAmount()));
 
-        return receiverAccount;
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     public Account thirdPartyTransactionSendMoney(String hashedKey, ThirdPartyTransactionDTO thirdPartyTransactionDTO){
@@ -272,12 +309,20 @@ public class TransactionService {
         if(sendingAccount instanceof SavingsAccount){
             ((SavingsAccount) sendingAccount).applyPenaltyFeeSavings();
             ((SavingsAccount) sendingAccount).applyInterestRateSavings();
+            accountRepository.save(sendingAccount);
+            return sendingAccount;
         }
         // check if its Checking Account, and apply maintenance Fee:
         if(sendingAccount instanceof CheckingAccount){
             ((CheckingAccount) sendingAccount).applyPenaltyFeeChecking();
             ((CheckingAccount) sendingAccount).applyMaintenanceFeeChecking();
-
+            accountRepository.save(sendingAccount);
+            return sendingAccount;
+        }
+        // check if its Student Account:
+        if(sendingAccount instanceof StudentAccount){
+            accountRepository.save(sendingAccount);
+            return sendingAccount;
         }
 
         // save the sending account to the DB
@@ -286,7 +331,7 @@ public class TransactionService {
         // save the transaction to the DB
         Transaction transaction = transactionRepository.save(new Transaction(null, sendingAccount, sendingAccount.getPrimaryOwner().getName(),thirdPartyTransactionDTO.getAmount()));
 
-        return sendingAccount;
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     public List getTransactionList(Authentication authentication){

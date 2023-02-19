@@ -88,11 +88,11 @@ public class AccountHolderController {
         return transactionService.makeTransactionWithAUTH(transactionDTO, authentication);
     }
     // ----------- Transaction  WITHOUT AUTH -------------------------
-    @PostMapping("/transaction-without-auth")
-    @ResponseStatus(HttpStatus.OK)
-    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
-        return transactionService.makeTransactionWithoutAUTH(transactionDTO);
-    }
+//    @PostMapping("/transaction-without-auth")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
+//        return transactionService.makeTransactionWithoutAUTH(transactionDTO);
+//    }
     // ----------- GET LIST OF TRANSACTIONS -------------------
     @GetMapping("/transaction/all")
     @ResponseStatus(HttpStatus.OK)

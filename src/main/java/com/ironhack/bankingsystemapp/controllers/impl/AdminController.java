@@ -84,17 +84,12 @@ public class AdminController {
         return accountService.findById(id);
     }
 
-    @GetMapping("/accounts/user")           // ONLY WORKS IF USER ONLY HAS 1 ACCOUNT
-    @ResponseStatus(HttpStatus.OK)
-    public Account getAccountByUserName(@RequestParam String userName) {
-        return accountService.findByName(userName);
-    }
 
     // --------- Get List of Accounts -----------
-    @GetMapping("/accounts/user/{userId}")
+    @GetMapping("/accounts/user")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getListAccounts(@PathVariable Long userId){
-        return accountHolderService.getListOfAccountsById(userId);
+    public List<Account> getListAccounts(@RequestParam String username){
+        return accountHolderService.getListOfAccountsByUsernameAdmin(username);
     }
 
     //--------- Delete Account ---------------
@@ -173,7 +168,7 @@ public class AdminController {
     @DeleteMapping("/users/delete")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void deleteUser(@RequestParam Long id){
-        userRepository.deleteById(id);
+        userService.deleteUser(id);
     }
 
     // --------- get Users ------------
@@ -204,6 +199,20 @@ public class AdminController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addRoleToUser(@RequestParam String userName, String roleName){
         userService.addRoleToUser(userName,roleName);
+    }
+
+    // ------------- add Role ----------------
+    @PostMapping("/roles/new")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Role saveRole(@RequestBody Role role) {
+       return userService.saveRole(role);
+    }
+
+    // ---------- get Roles -----------
+    @GetMapping("/roles/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Role> getAllRoles(){
+        return roleRepository.findAll();
     }
 
 }

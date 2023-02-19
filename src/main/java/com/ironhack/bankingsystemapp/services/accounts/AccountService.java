@@ -104,10 +104,6 @@ public void deleteAccount(Long id){
             accountRepository.save(savingAccount);
             return accountRepository.findById(savingAccount.getId()).get().getBalance();
         }
-//            //OR THIS WAY with Code from lines 58-67
-//            if(account instanceof SavingsAccount){
-//                applyInterestRateSavings(accountId);
-//            }
 
         // check if its CreditCard, and apply interest rate:
         if(account instanceof CreditCard){
@@ -117,10 +113,6 @@ public void deleteAccount(Long id){
             accountRepository.save(creditCard);
             return accountRepository.findById(creditCard.getId()).get().getBalance();
         }
-        // OR THIS WAY with code from lines 68-77
-//            if(account instanceof CreditCard){
-//                applyInterestRateCredit(accountId);
-//            }
 
         // check if its Checking Account, and apply maintenance Fee:
         if(account instanceof CheckingAccount){
@@ -137,10 +129,6 @@ public void deleteAccount(Long id){
             accountRepository.save(studentAccount);
             return accountRepository.findById(studentAccount.getId()).get().getBalance();
         }
-        //OR THIS WAY with Code from lines 81-88
-//            if(account instanceof CheckingAccount){
-//                applyMaintenanceFee(accountId);
-//            }
 
         //return accountRepository.findById(accountId).get().getBalance();
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -165,7 +153,8 @@ public void deleteAccount(Long id){
     }
 
 
-    // TEST 2 IS WORKING !!!!!!!!
+    // as AccountHolder
+    // WITH AUTHENTICATION
     public BigDecimal getBalanceAccountHolderWithAuth(Long accountId, Authentication authentication){
         AccountHolder user = accountHolderRepository.findByUsername(authentication.getName().toString()).orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not Authorized"));
 
@@ -206,8 +195,6 @@ public BigDecimal modifyBalanceSubtract(Long id, BigDecimal amount){
 }
 
 
-
-//  ?? change primary / secondary owner ??
 
 
 
