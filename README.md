@@ -63,30 +63,30 @@ All Accounts have pre-defined values for interest rate, minimum balance and cred
 
 
 ### UML Class Diagram
-![UML Class Diagramm](ClassDiagramm.jpg)
+![UML Class Diagramm](assets/ClassDiagramm.jpg)
 
 ### APIS
 The routes for all the functionalities are divided by the type of User. Each user has an assigned Role ("ADMIN", "ACCOUNT-HOLDER" or "THIRD-PARTY"). Depending on the role, the user has different rights to access information. 
 
 - Admin Routes: <br>
 
-  ![Admin Routes](admin-routes.png)
+  ![Admin Routes](assets/admin-routes.png)
 
 
- [**Admin Routes Postman Collection JSON**](BankingApp_Admin.postman_collection.json)
+ [**Admin Routes Postman Collection JSON**](assets/BankingApp_Admin.postman_collection.json)
 
 - Account Holder Routes: <br>
 
-  ![Account Holder Routes](account-holder-routes.png)
+  ![Account Holder Routes](assets/account-holder-routes.png)
 
 
 [**Account Holder Routes Postman Collection JSON**](BankinApp_AccountHolder.postman_collection.json)
 
 - Third Party Routes: <br>
-  ![Third Party Routes](third-party-routes.png)
+  ![Third Party Routes](assets/third-party-routes.png)
 
 
-[**Third Party Routes Postman Collection JSON**](BankingApp_ThirdParty.postman_collection.json)
+[**Third Party Routes Postman Collection JSON**](assets/BankingApp_ThirdParty.postman_collection.json)
 
 
 ### Notes for Mock Tests
