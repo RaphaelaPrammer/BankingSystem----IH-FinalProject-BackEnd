@@ -63,10 +63,11 @@ All Accounts have pre-defined values for interest rate, minimum balance and cred
 
 
 ### UML Class Diagram
+[see PDF](assets/ClassDiagramm.pdf)
 ![UML Class Diagramm](assets/ClassDiagramm.jpg)
 
 ### APIS
-The routes for all the functionalities are divided by the type of User. Each user has an assigned Role ("ADMIN", "ACCOUNT-HOLDER" or "THIRD-PARTY"). Depending on the role, the user has different rights to access information. 
+The routes for all the functionalities are divided by the type of User. Each user has an assigned Role ("ADMIN", "ACCOUNT-HOLDER" or "THIRD-PARTY"). Depending on the role, the user has different rights to access information and to perform different type of actions. 
 
 - Admin Routes: <br>
 
