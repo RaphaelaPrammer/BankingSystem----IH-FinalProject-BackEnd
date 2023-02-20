@@ -57,12 +57,8 @@ public class AccountHolderControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-//    @AfterEach
-//    public void tearDown(){
-//        accountHolderRepository.deleteAll();
-//        checkingAccountRepository.deleteAll();
-//        savingAccountRepository.deleteAll();
-//    }
+
+    // CREATE NEW USER:
     @Test
     public void shouldCreateAccountHolder() throws Exception {
         Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
@@ -99,33 +95,13 @@ public class AccountHolderControllerTest {
         System.out.println(mvcResult.getResponse().getContentAsString());
         assertTrue(mvcResult.getResponse().getContentAsString().contains(BigDecimal.valueOf(1050).toString()));
     }
-    // GET BALANCE WITHOUT AUTHENTICATION - OK!
-//    @Test
-//    public void shouldGetBalanceWithoutAuth() throws Exception {
-//        Address address = new Address("Calle 1", "Barcelona", "08000", "Spain");
-//        AccountHolder accountHolderX = accountHolderRepository.save(new AccountHolder("User2Test", "user2test", "1234", LocalDate.of(1980, 01, 01), address)) ;
-//        SavingsAccount savingsAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(1050),accountHolderX,"ABC"));
-//
-//        String body = objectMapper.writeValueAsString(savingsAccount);
-//
-//        MvcResult mvcResult=mockMvc.perform(get("/api/accountholder-area/accounts/my-balance-without-auth")
-//                        //.with(user("user2test").password("1234").roles("ACCOUNT-HOLDER"))
-//                        .param("accountId",savingsAccount.getId().toString())
-//                        .param("ownerId", accountHolderX.getId().toString())
-//                .content(body).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        //System.out.println(mvcResult.getResolvedException());
-//        System.out.println(mvcResult.getResponse().getContentAsString());
-//        assertTrue(mvcResult.getResponse().getContentAsString().contains(BigDecimal.valueOf(1050).toString()));
-//    }
 
-    // TRANSFER MONEY WITH AUTHENTICATION !! ----------- TEST NOT WORKING :/ -- BUT IN POSTMAN OK!!!
+    // TRANSFER MONEY WITH AUTHENTICATION !! ----------------
     @Test
     public void shouldTransferMoneyWithAuth() throws Exception {
         Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
         // Sender Account and Accountholder
-        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User4Test", "user4test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
         SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2100),senderAccountHolder,"ABC"));
 
         // Reveiver Account and Accountholder
@@ -138,7 +114,7 @@ public class AccountHolderControllerTest {
         String body = objectMapper.writeValueAsString(transactionTest);
 
         MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-with-auth")
-                        .with(user("user3test").password("1234").roles("ACCOUNT-HOLDER"))
+                        .with(user("user4test").password("1234").roles("ACCOUNT-HOLDER"))
                         .content(body).contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andReturn();
@@ -146,38 +122,13 @@ public class AccountHolderControllerTest {
         assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":2000.00"));
 
     }
-    // TRANSFER MONEY WITHOUT AUTHENTICATION , Otherwise Test OKAY!!
-//    @Test
-//    public void shouldTransferMoneyWithoutAuth() throws Exception {
-//        Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
-//        // Sender Account and Accountholder
-//        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
-//        SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),senderAccountHolder,"ABC"));
-//
-//        // Reveiver Account and Accountholder
-//        AccountHolder receiverAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
-//        SavingsAccount receiverAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),receiverAccountHolder,"ABC"));
-//
-//        // Transaction from
-//        TransactionDTO transactionTest = new TransactionDTO(senderAccount.getId(), receiverAccount.getId(),receiverAccountHolder.getName(),BigDecimal.valueOf(100));
-//
-//        String body = objectMapper.writeValueAsString(transactionTest);
-//
-//        MvcResult mvcResult = mockMvc.perform(post("/api/accountholder-area/transaction-without-auth").content(body).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        System.out.println(mvcResult.getResponse().getContentAsString());
-//       assertTrue(mvcResult.getResponse().getContentAsString().contains("\"balance\":1950.00"));
-//
-//    }
 
-
-    // -------------- GET LIST OF TRANSACTIONS ------- TEST NOT WORKING :/ ? - BUT IN POSTMAN OK!!
+    // -------------- GET LIST OF TRANSACTIONS -------
 @Test
     public void shouldGetListOfTransferences() throws Exception {
              Address address2 = new Address("Calle 2", "Barcelona", "08000", "Spain");
         // Sender Account and Accountholder
-        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User3Test", "user3test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
+        AccountHolder senderAccountHolder = accountHolderRepository.save(new AccountHolder("User5Test", "user5test", "1234", LocalDate.of(1980, 01, 01), address2)) ;
         SavingsAccount senderAccount = savingsAccountRepository.save(new SavingsAccount(BigDecimal.valueOf(2050),senderAccountHolder,"ABC"));
 
         // Reveiver Account and Accountholder
@@ -192,11 +143,13 @@ public class AccountHolderControllerTest {
 
 
             MvcResult mvcResult = mockMvc.perform(get("/api/accountholder-area/transaction/all")
-                            .with(user("user3test").password("1234").roles("ACCOUNT-HOLDER")))
+                            .with(user("user5test").password("1234").roles("ACCOUNT-HOLDER")))
                             .andExpect(status().isOk())
                             .andReturn();
 
             assertEquals(2, transactionRepository.findAll().size());
 }
+
+
 
 }

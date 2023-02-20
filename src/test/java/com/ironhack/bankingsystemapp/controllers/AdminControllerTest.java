@@ -92,7 +92,7 @@ public class AdminControllerTest {
     //-----------------------------------------------------
     // Tests work individually, but not when the class is being executed.
     // For Assertations of number of Accounts/Users - take into account that for each Type there already exist one entry in the DB, which was created in the Main application.
-// Users:5, Accounts:4
+    // Users:5, Accounts:4
     //-----------------------------------------------------
 
     @Test

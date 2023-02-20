@@ -59,12 +59,10 @@ public class AccountHolderService {
 
 // add Mailing address to Account Holder info
     public AccountHolder addMailingAddress(Long userId, Address mailAddress){
-
+        // check if the Account exists.
         AccountHolder accountHolderFromDB = accountHolderRepository.findById(userId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Holder does not exist"));
-
-            accountHolderFromDB.setMailingAddress(mailAddress);
-
-            return accountHolderFromDB;
+        accountHolderFromDB.setMailingAddress(mailAddress);
+        return accountHolderFromDB;
     }
 
     // update Address Info in Account Holder Info

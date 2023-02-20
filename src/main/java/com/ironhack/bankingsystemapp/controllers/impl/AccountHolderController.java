@@ -35,19 +35,12 @@ public class AccountHolderController {
 
 
 
-    //--------- Get Balance of Account WITH AUTH------------!!!!!!!!!!! WORKING---
+    //--------- Get Balance of Account WITH AUTHENTICATION------------
     @GetMapping("/accounts/my-balance-with-auth")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getBalanceTest2(@RequestParam Long accountId,Authentication authentication){
         return accountService.getBalanceAccountHolderWithAuth(accountId, authentication);
     }
-    //--------- Get Balance of Account WITHOUT AUTH---------------
-//    @GetMapping("/accounts/my-balance-without-auth")
-//    @ResponseStatus(HttpStatus.OK)
-//    public BigDecimal getBalance(@RequestParam Long accountId, @RequestParam Long ownerId){
-//        return accountService.getBalanceAccountHolder(accountId, ownerId);
-//    }
-
 
   // --------- Get List of Accounts  WITH AUTHENTICATION-----------
     @GetMapping("/my-accounts")
@@ -55,12 +48,6 @@ public class AccountHolderController {
     public List<Account> getListAccounts(Authentication authentication){
         return accountHolderService.getListOfAccountsByUsername(authentication);
     }
-    // --------- Get List of Accounts  WITHOUT AUTHENTICATION-----------
-//    @GetMapping("/accounts/")
-//    @ResponseStatus(HttpStatus.OK)
-//            public List<Account> getAccounts(@RequestParam Long UserId){
-//           return accountHolderService.getListOfAccountsById(UserId);
-//    }
 
    // ----------- Update Account Info -------------
     @PatchMapping("/add-mailing-address")
@@ -87,12 +74,7 @@ public class AccountHolderController {
     public Account transferMoney(@RequestBody TransactionDTO transactionDTO, Authentication authentication){
         return transactionService.makeTransactionWithAUTH(transactionDTO, authentication);
     }
-    // ----------- Transaction  WITHOUT AUTH -------------------------
-//    @PostMapping("/transaction-without-auth")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Account transferMoney(@RequestBody TransactionDTO transactionDTO){
-//        return transactionService.makeTransactionWithoutAUTH(transactionDTO);
-//    }
+
     // ----------- GET LIST OF TRANSACTIONS -------------------
     @GetMapping("/transaction/all")
     @ResponseStatus(HttpStatus.OK)
